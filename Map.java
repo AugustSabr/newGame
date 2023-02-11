@@ -1,5 +1,5 @@
-public class Layout {
-  String[][] map = {
+public class Map {
+  String[][] layout = {
     {" ", " ", " ", "d", "i", " ", " ", " "},
     {" ", " ", " ", " ", "e", " ", " ", " "},
     {" ", " ", " ", " ", "e", " ", " ", " "},
@@ -11,21 +11,25 @@ public class Layout {
     {" ", " ", " ", " ", "k", "m", " ", " "},
     {" ", " ", " ", " ", "c", "c", " ", " "}
   };
-  int x = 3;
-  int y = 0;
-  String position = map[y][x];
-  
-  String facing = "east";
-  UI ui;
+  int x;
+  int y;
+  String facing;
+  String position;
 
-  public Layout(UI u) {
+  UI ui;
+  Encounter en;
+
+  public Map(UI u, Encounter e, int x2, int y2, String f) {
     ui = u;
-    System.out.println(position);
-    System.out.println(facing);
-}
+    en = e;
+
+    x = x2;
+    y = y2;
+    facing = f;
+    draw();
+  }
 
   public void move(String s){
-    //move
     switch(facing){
       case "north":
         String[] northUp = {"c", "e", "k", "m", "o"};
@@ -37,6 +41,8 @@ public class Layout {
             for(int i = 0; i < northUp.length; i++){
               if(position == northUp[i]){
                 y=y-1;
+
+                en.newMonster();
               }
             } break;
           case "down":
@@ -44,6 +50,8 @@ public class Layout {
               if(position == northDown[i]){
                 y++;
                 facing="south";
+
+                en.newMonster();
               }
             } break;
           case "right":
@@ -51,6 +59,8 @@ public class Layout {
               if(position == northRight[i]){
                 x++;
                 facing="east";
+
+                en.newMonster();
               }
             } break;
           case "left":
@@ -58,6 +68,8 @@ public class Layout {
               if(position == northLeft[i]){
                 x=x-1;
                 facing="west";
+
+                en.newMonster();
               }
             } break;
         } break;
@@ -79,6 +91,8 @@ public class Layout {
               if(position == southDown[i]){
                 y=y-1;
                 facing="north";
+
+                en.newMonster();
               }
             } break;
           case "right":
@@ -86,6 +100,8 @@ public class Layout {
               if(position == southRight[i]){
                 x=x-1;
                 facing="west";
+
+                en.newMonster();
               }
             } break;
           case "left":
@@ -93,6 +109,8 @@ public class Layout {
               if(position == southLeft[i]){
                 x++;
                 facing="east";
+
+                en.newMonster();
               }
             } break;
         } break;
@@ -107,6 +125,8 @@ public class Layout {
             for(int i = 0; i < eastUp.length; i++){
               if(position == eastUp[i]){
                 x++;
+
+                en.newMonster();
               }
             } break;
           case "down":
@@ -114,6 +134,8 @@ public class Layout {
               if(position == eastDown[i]){
                 x=x-1;
                 facing="west";
+
+                en.newMonster();
               }
             } break;
           case "right":
@@ -121,6 +143,8 @@ public class Layout {
               if(position == eastRight[i]){
                 y++;
                 facing="south";
+
+                en.newMonster();
               }
             } break;
           case "left":
@@ -128,6 +152,8 @@ public class Layout {
               if(position == eastLeft[i]){
                 y=y-1;
                 facing="north";
+
+                en.newMonster();
               }
             } break;
         } break;
@@ -142,6 +168,8 @@ public class Layout {
             for(int i = 0; i < westUp.length; i++){
               if(position == westUp[i]){
                 x=x-1;
+
+                en.newMonster();
               }
             } break;
           case "down":
@@ -149,6 +177,8 @@ public class Layout {
               if(position == westDown[i]){
                 x++;
                 facing="east";
+
+                en.newMonster();
               }
             } break;
           case "right":
@@ -156,6 +186,8 @@ public class Layout {
               if(position == westRight[i]){
                 y=y-1;
                 facing="north";
+
+                en.newMonster();
               }
             } break;
           case "left":
@@ -163,87 +195,88 @@ public class Layout {
               if(position == westLeft[i]){
                 y++;
                 facing="south";
+
+                en.newMonster();
               }
             } break;
         } break;
     }
+    draw();
+  }
 
-    position = map[y][x];
-
-    //draw
-    ui.random("");
-
+  public void draw(){
+    position = layout[y][x];
     switch(position){
       case "a":
         switch(facing){
-          case "north": ui.random("wall"); break;
-          case "south": ui.random("i"); break;
+          case "north": ui.drawRoom("wall"); break;
+          case "south": ui.drawRoom("front"); break;
         } break;
       case "b":
         switch(facing){
-          case "east": ui.random("wall"); break;
-          case "west": ui.random("i"); break;
+          case "east": ui.drawRoom("wall"); break;
+          case "west": ui.drawRoom("front"); break;
         } break;
       case "c":
         switch(facing){
-          case "north": ui.random("i"); break;
-          case "south": ui.random("wall"); break;
+          case "north": ui.drawRoom("front"); break;
+          case "south": ui.drawRoom("wall"); break;
         } break;
       case "d":
         switch(facing){
-          case "east": ui.random("i"); break;
-          case "west": ui.random("wall"); break;
+          case "east": ui.drawRoom("front"); break;
+          case "west": ui.drawRoom("wall"); break;
         } break;
-      case "e": ui.random("i"); break;
-      case "f": ui.random("i"); break;
+      case "e": ui.drawRoom("front"); break;
+      case "f": ui.drawRoom("front"); break;
       case "g":
         switch(facing){
-          case "south": ui.random("left"); break;
-          case "west": ui.random("right"); break;
+          case "south": ui.drawRoom("left"); break;
+          case "west": ui.drawRoom("right"); break;
         } break;
       case "h":
         switch(facing){
-          case "north": ui.random("right"); break;
-          case "west": ui.random("left"); break;
+          case "north": ui.drawRoom("right"); break;
+          case "west": ui.drawRoom("left"); break;
         } break;
       case "i":
         switch(facing){
-          case "north": ui.random("left"); break;
-          case "east": ui.random("right"); break;
+          case "north": ui.drawRoom("left"); break;
+          case "east": ui.drawRoom("right"); break;
         } break;
       case "j":
         switch(facing){
-          case "south": ui.random("right"); break;
-          case "east": ui.random("left"); break;
+          case "south": ui.drawRoom("right"); break;
+          case "east": ui.drawRoom("left"); break;
         } break;
       case "k":
         switch(facing){
-          case "north": ui.random("hm"); break;
-          case "south": ui.random("klkl"); break;
-          case "west": ui.random("T"); break;
+          case "north": ui.drawRoom("frontRight"); break;
+          case "south": ui.drawRoom("frontLeft"); break;
+          case "west": ui.drawRoom("t-intersection"); break;
         } break;
       case "l":
         switch(facing){
-          case "north": ui.random("T"); break;
-          case "east": ui.random("hm"); break;
-          case "west": ui.random("klkl"); break;
+          case "north": ui.drawRoom("t-intersection"); break;
+          case "east": ui.drawRoom("frontRight"); break;
+          case "west": ui.drawRoom("frontLeft"); break;
         } break;
       case "m":
         switch(facing){
-          case "north": ui.random("klkl"); break;
-          case "south": ui.random("hm"); break;
-          case "east": ui.random("T"); break;
+          case "north": ui.drawRoom("frontLeft"); break;
+          case "south": ui.drawRoom("frontRight"); break;
+          case "east": ui.drawRoom("t-intersection"); break;
         } break;
       case "n":
         switch(facing){
-          case "south": ui.random("T"); break;
-          case "east": ui.random("klkl"); break;
-          case "west": ui.random("hm"); break;
+          case "south": ui.drawRoom("t-intersection"); break;
+          case "east": ui.drawRoom("frontLeft"); break;
+          case "west": ui.drawRoom("frontRight"); break;
         } break;
-      case "o": ui.random("x");break;
+      case "o": ui.drawRoom("crossroad");break;
     }
+    // ui.drawMonster("me");
     System.out.println();
-    System.out.println(s);
     System.out.println(position);
     System.out.println(facing);
   }

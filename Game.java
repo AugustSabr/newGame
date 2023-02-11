@@ -1,18 +1,14 @@
 public class Game {
   private UI ui = new UI();
-  private KeyListenerTester key;
-  private Layout la;
+  private _KeyListener key;
+  private Map map;
+  private Encounter e;
 
     public Game() {
       ui.createUI();
-      la = new Layout(ui);
-      key = new KeyListenerTester(la, ui);// choiceHandler er en class jeg lagde selv. sel lenger nede
-
-      // JLabel label;
-      // JPanel p = new JPanel();
-      // label = new JLabel("Key Listener!");
-      // p.add(label);
-
+      e = new Encounter(ui);
+      map = new Map(ui, e, 3, 0, "east");
+      key = new _KeyListener(map, ui);
     }
     public static void main(String[] args) {
       new Game();
