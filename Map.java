@@ -1,5 +1,5 @@
 public class Map {
-  String[][] layout = {
+  String[][] mapLayout = {
     {" ", " ", " ", "d", "i", " ", " ", " "},
     {" ", " ", " ", " ", "e", " ", " ", " "},
     {" ", " ", " ", " ", "e", " ", " ", " "},
@@ -8,25 +8,44 @@ public class Map {
     {"d", "f", "f", "o", "f", "f", "j", " "},
     {"d", "f", "l", "o", "l", "i", " ", " "},
     {" ", " ", "c", "c", "e", "k", "b", " "},
-    {" ", " ", " ", " ", "k", "m", " ", " "},
+    {" ", " ", "c", " ", "k", "m", " ", " "},
     {" ", " ", " ", " ", "c", "c", " ", " "}
   };
-  int x;
-  int y;
-  String facing;
-  String position;
+
+  public String[][] structureLayout = {
+    {" ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", "p", " ", " ", " ", " ", " "},
+    {" ", " ", "r", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " "}
+  };
+
+  public int x;
+  public int y;
+  String facing, position, structure;
+  int floor = 1;
 
   UI ui;
   Encounter en;
+  _KeyListener key;
 
-  public Map(UI u, Encounter e, int x2, int y2, String f) {
+  public Map(UI u, Encounter e, int _x, int _y, String f) {
     ui = u;
     en = e;
 
-    x = x2;
-    y = y2;
+    x = _x;
+    y = _y;
     facing = f;
+    en.addMap(this);
     draw();
+  }
+  public void addKeyListener(_KeyListener k){
+    key = k;
   }
 
   public void move(String s){
@@ -42,7 +61,7 @@ public class Map {
               if(position == northUp[i]){
                 y=y-1;
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
           case "down":
@@ -51,7 +70,7 @@ public class Map {
                 y++;
                 facing="south";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
           case "right":
@@ -60,7 +79,7 @@ public class Map {
                 x++;
                 facing="east";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
           case "left":
@@ -69,7 +88,7 @@ public class Map {
                 x=x-1;
                 facing="west";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
         } break;
@@ -92,7 +111,7 @@ public class Map {
                 y=y-1;
                 facing="north";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
           case "right":
@@ -101,7 +120,7 @@ public class Map {
                 x=x-1;
                 facing="west";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
           case "left":
@@ -110,7 +129,7 @@ public class Map {
                 x++;
                 facing="east";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
         } break;
@@ -126,7 +145,7 @@ public class Map {
               if(position == eastUp[i]){
                 x++;
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
           case "down":
@@ -135,7 +154,7 @@ public class Map {
                 x=x-1;
                 facing="west";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
           case "right":
@@ -144,7 +163,7 @@ public class Map {
                 y++;
                 facing="south";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
           case "left":
@@ -153,7 +172,7 @@ public class Map {
                 y=y-1;
                 facing="north";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
         } break;
@@ -169,7 +188,7 @@ public class Map {
               if(position == westUp[i]){
                 x=x-1;
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
           case "down":
@@ -178,7 +197,7 @@ public class Map {
                 x++;
                 facing="east";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
           case "right":
@@ -187,7 +206,7 @@ public class Map {
                 y=y-1;
                 facing="north";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
           case "left":
@@ -196,7 +215,7 @@ public class Map {
                 y++;
                 facing="south";
 
-                en.newMonster();
+                en.newEncounter();
               }
             } break;
         } break;
@@ -205,7 +224,8 @@ public class Map {
   }
 
   public void draw(){
-    position = layout[y][x];
+    position = mapLayout[y][x];
+    structure = structureLayout[y][x];
     switch(position){
       case "a":
         switch(facing){
@@ -275,8 +295,15 @@ public class Map {
         } break;
       case "o": ui.drawRoom("crossroad");break;
     }
+    ui.drawStructure("");
+    switch(structure){
+      case "p": ui.drawStructure("door"); key.z = "check door"; break;
+      case "q": ui.drawStructure("openDoor"); key.z = "go thru door"; break;
+      case "r": ui.drawStructure("shop"); break;
+    }
     // ui.drawMonster("me");
     System.out.println();
+    System.out.println(structure);
     System.out.println(position);
     System.out.println(facing);
   }

@@ -4,11 +4,16 @@ import java.awt.event.KeyListener;
 public class _KeyListener implements KeyListener {
     Map map;
     UI ui;
+    Encounter en;
+    String z, x, c;
 
-    public _KeyListener(Map m, UI u) {
+    public _KeyListener(Map m, UI u, Encounter e) {
         map = m;
         ui = u;
+        en = e;
         ui.window.addKeyListener(this);
+        e.addKeyListener(this);
+        map.addKeyListener(this);
     }
 
     @Override
@@ -32,6 +37,17 @@ public class _KeyListener implements KeyListener {
         }
         if (e.getKeyCode() == KeyEvent.VK_LEFT) {
             map.move("left");
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_Z) {
+            System.out.println("Z");
+            en.selectPosition(z);
+        }
+        if (e.getKeyCode() == KeyEvent.VK_X) {
+            System.out.println("X");
+        }
+        if (e.getKeyCode() == KeyEvent.VK_C) {
+            System.out.println("C");
         }
     }
 }
