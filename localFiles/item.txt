@@ -1,2 +1,8 @@
 key
 key
+50
+1
+broken bow
+placeholder
+35
+1

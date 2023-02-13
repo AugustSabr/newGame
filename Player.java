@@ -23,12 +23,6 @@ public class Player{
     public String getName(){
       return this.name;
     }
-    public ArrayList<String> getInventory() {
-      return inventory;
-    }
-    public void addInventory(String s) {
-      inventory.add(s);
-    }
     public int getMaxHealth(){
       return this.maxHealth;
     }

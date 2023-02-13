@@ -1,13 +1,24 @@
 public class Item {
-  String name = "key";
-  String path = "key";
-  UI ui;
-  
-  public Item(UI u){
-    ui = u;
+  private String name, path;
+  private int tier, value;
+
+  public Item(String n, String p, int v, int t){
+    name = n;
+    path = p;
+    value = v;
+    tier = t;
   }
 
-  public void newItem(){
-    ui.drawEncounter("items", path);
+  public String getName() {
+    return name;
+  }
+  public String getPath() {
+    return path;
+  }
+  public int getValue() {
+    return value;
+  }
+  public int getTier() {
+    return tier;
   }
 }

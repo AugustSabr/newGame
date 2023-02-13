@@ -10,13 +10,13 @@ import java.io.FileWriter;
 public class UpdateLocalFiles {
 
   // info-en du trenger for å koble til database;
-  String ip = "10.0.0.2";
-  String port = "3306";
-  String username = "Klient";
-  String password = "n]ua2BeXUF!ci[mK";
-  String database = "game4";
+  private String ip = "10.0.0.2";
+  private String port = "3306";
+  private String username = "Klient";
+  private String password = "n]ua2BeXUF!ci[mK";
+  private String database = "game4";
 
-  String[] categories = {"weapon", "armor", "blessing", "enemy"};
+  private String[] categories = {"weapon", "armor", "blessing", "enemy"};
   
   public UpdateLocalFiles(){
     try {
