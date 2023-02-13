@@ -16,6 +16,7 @@ public class VisibilityManager {
     //titlescreen
     ui.titleNamePanel.setVisible(true);
     ui.startButtonPanel.setVisible(true);
+    ui.startButtonPanel.requestFocus();
     ui.updateButtonPanel.setVisible(true);
 
     //inputname

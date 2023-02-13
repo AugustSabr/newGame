@@ -61,7 +61,7 @@ public class UI {
       buttonList.get(i).setBorder(BorderFactory.createLineBorder(Color.white, 1));
     }
     for(int i = 0; i < selectedButtons.size(); i++){
-      buttonList.get(selectedButtons.get(i)).setBorder(BorderFactory.createLineBorder(Color.red, 1));
+      buttonList.get(selectedButtons.get(i)).setBorder(BorderFactory.createLineBorder(Color.red, 4));
     }
     buttonList.get(pos).setBorder(BorderFactory.createLineBorder(Color.white, 4));
     updateSellCounter();
@@ -213,7 +213,7 @@ public class UI {
     con.add(choiceButtonPanel);
 
     for(int i = 0; i < 12; i++) {
-      JButton button = new JButton();
+      JButton button = new JButton(null, null);
       if(i == 11){
         button.setText("Leave");
       }

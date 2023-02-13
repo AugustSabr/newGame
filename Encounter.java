@@ -1,3 +1,5 @@
+import java.util.Iterator;
+
 public class Encounter {
   private UI ui;
   private Item i;
@@ -57,7 +59,7 @@ public class Encounter {
   }
 
   public void newEncounter(){
-    this.randomEncounter = (int)Math.floor(Math.random()*5);
+    this.randomEncounter = (int)Math.floor(Math.random()*10);
 
     ui.drawEncounter("","");
     if(randomEncounter == 0){
@@ -145,16 +147,20 @@ public class Encounter {
   private void sellItemsToShop(){
     ui.mainTextArea.setText("<shopkeeper>\nWhat a steal.");
 
-    for(int i = 0; i < player.inventory.size(); i++){
-      for(int j = 0; j < ui.selectedButtons.size(); j++){
+    System.out.println(player.inventory.size());
+    for (Iterator<String> it = player.inventory.iterator(); it.hasNext();) {
+      String name = it.next();
+      for(int i = 0; i < ui.selectedButtons.size(); i++){
 
-        if(player.inventory.get(i) == ui.buttonList.get(ui.selectedButtons.get(j)).getText()){
-          player.inventory.remove(i);
-          System.out.println(player.inventory);
+        if(name.equals(ui.buttonList.get(ui.selectedButtons.get(i)).getText())){
+          it.remove();
+          ui.selectedButtons.remove(i);
+          player.addGold(Integer.parseInt(ui.intSellCounterLabel.getText()));
         }
       }
     }
-    player.addGold(Integer.parseInt(ui.intSellCounterLabel.getText()));
+
+    System.out.println(player.inventory);
     System.out.println(player.getGold());
     selectItemsToSell();
   }
