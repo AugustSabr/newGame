@@ -61,19 +61,22 @@ public class _KeyListener implements KeyListener {
     if (e.getKeyCode() == KeyEvent.VK_Z) {
       if(walking){
         en.selectPosition(z);
-      }
-      if(inventory){
+      }else if(inventory){
         ui.buttonList.get(ui.pos).doClick();
       }
-      System.out.println(z);
     }
     if (e.getKeyCode() == KeyEvent.VK_X) {
-      System.out.println(x);
-      en.selectPosition(x);
+      if(walking){
+        en.selectPosition(x);
+      }
     }
     if (e.getKeyCode() == KeyEvent.VK_C) {
-      System.out.println(c);
-      en.selectPosition(c);
+      if(walking){
+        en.selectPosition(c);
+      }
     }
+    // System.out.println(z);
+    // System.out.println(x);
+    // System.out.println(c);
   }
 }

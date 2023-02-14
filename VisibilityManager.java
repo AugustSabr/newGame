@@ -66,16 +66,15 @@ public class VisibilityManager {
     ui.choiceButtonPanel.setVisible(false);
   }
   public void showchoiceButtons(){
-    key.walking = false;
-    key.inventory = true;
     ui.choiceButtonPanel.setVisible(true);
     ui.sellCounterPanel.setVisible(true);
-    // ui.choiceButtonPanel.requestFocus();
+    key.walking = false;
+    key.inventory = true;
   }
   public void dontShowchoiceButtons(){
-    key.walking = true;
-    key.inventory = false;
     ui.choiceButtonPanel.setVisible(false);
     ui.sellCounterPanel.setVisible(false);
+    key.walking = true;
+    key.inventory = false;
   }
 }

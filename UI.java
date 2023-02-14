@@ -17,7 +17,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class UI {
-  Game game;
   Player player;
   GameInventory in;
 
@@ -41,7 +40,7 @@ public class UI {
     { 10, 11}
   };
 
-  int y = 5, x = 0, pos = buttonListLayout[y][x];
+  int y=5, x=1, pos = buttonListLayout[y][x];
   public void chageButton(String s){
     if(pos % 2 == 0 && s == "right"){
       x++;
@@ -64,7 +63,6 @@ public class UI {
       buttonList.get(selectedButtons.get(i)).setBorder(BorderFactory.createLineBorder(Color.red, 4));
     }
     buttonList.get(pos).setBorder(BorderFactory.createLineBorder(Color.white, 4));
-    updateSellCounter();
   }
 
   ArrayList<Integer> selectedButtons = new ArrayList<>();
@@ -72,7 +70,8 @@ public class UI {
     if(!buttonCheck(me)){
       selectedButtons.add(me);
     }
-    System.out.println(selectedButtons);
+    updateSellCounter();
+    // System.out.println(selectedButtons);
   }
 
   public boolean buttonCheck(int check) {
@@ -101,11 +100,9 @@ public class UI {
       }
     }
     intSellCounterLabel.setText(""+sellSum);
-    game.pIn = "sellItemsToShop";
   }
-  public UI(Player p, Game g) {
+  public UI(Player p) {
     player = p;
-    game = g;
   }
   public void addGameInventory(GameInventory ga) {
     in = ga;
@@ -214,9 +211,6 @@ public class UI {
 
     for(int i = 0; i < 12; i++) {
       JButton button = new JButton(null, null);
-      if(i == 11){
-        button.setText("Leave");
-      }
       button.setBackground(Color.black);
       button.setForeground(Color.white);
       button.setFont(normalFont);
@@ -228,7 +222,7 @@ public class UI {
     }
 
     sellCounterPanel = new JPanel();
-    sellCounterPanel.setBounds(550, 475, 150, 150);
+    sellCounterPanel.setBounds(550, 425, 150, 30);
     sellCounterPanel.setBackground(Color.black);
     sellCounterPanel.setLayout(new GridLayout(1, 2));
     con.add(sellCounterPanel);

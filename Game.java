@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 public class Game {
   private Player player;
-  private UI ui = new UI(player, this);
+  private UI ui = new UI(player);
   private VisibilityManager vm = new VisibilityManager(ui);
   private ChoiceHandler cHandler = new ChoiceHandler();
   private Map map;
@@ -70,7 +70,7 @@ public class Game {
     }
     ui.addGameInventory(in);
     vm.showGamescreen();
-    e = new Encounter(ui, player, in, vm);
+    e = new Encounter(ui, player, in, vm, this);
     map = new Map(ui, e, vm, 3, 0, "east");
     key = new _KeyListener(map, ui, e);
     vm.addKeyListener(key);

@@ -1,6 +1,7 @@
-import java.util.Iterator;
+import java.util.ArrayList;
 
 public class Encounter {
+  private Game game;
   private UI ui;
   private Item i;
   private _KeyListener key;
@@ -11,14 +12,20 @@ public class Encounter {
   private Player player;
   private int randomEncounter;
   private Item newItem;
-  // Weapon
+
+  ArrayList<Integer> shopInventory = new ArrayList<>();
+  // private int shopWeapons = (int)Math.floor(Math.random()*3) + 1;
+  private int shopWeapons = 7;
+  private String[] shopSmalltalk = {"<shopkeeper>\nCan I help you with something specific, or are you just here to waste my time?", "<shopkeeper>\nIf you're not going to buy anything, please don't touch the merchandise.", "<shopkeeper>\nI don't have all day to stand here and chat. If you're not going to make a purchase, I suggest you leave.", "<shopkeeper>\nIf you don't know what you want, maybe you should come back when you do.", "<shopkeeper>\nI'm sorry, but I'm not in the mood for small talk right now. Is there something specific you're looking for?"};
   
-  public Encounter(UI u, Player p, GameInventory gi, VisibilityManager v) {
+  public Encounter(UI u, Player p, GameInventory gi, VisibilityManager v, Game g) {
+    game = g;
     ui = u;
     in = gi;
     vm = v;
 
     player = p;
+    updateShop();
   }
   public void addKeyListener(_KeyListener k) {
     key = k;
@@ -34,12 +41,12 @@ public class Encounter {
       case "openDoor": openDoor(); break;
       case "goThruDoor": goThruDoor(); break;
       case "talkToShopkeeper": talkToShopkeeper(); break;
-      case "buyFormShop": buyFormShop(); break;
+      case "buyFromShop": buyFromShop(); break;
       case "selectItemsToSell": selectItemsToSell(); break;
       case "leaveShop": leaveShop(); break;
-      case "sellItemsToShop": sellItemsToShop(); break;
-      // case "upgradeWeapon": upgradeWeapon(); break;
-      // case "upgradeArmor": upgradeArmor(); break;
+      case "sellToShop": sellToShop(); break;
+      case "selectItemsToBuy": selectItemsToBuy(); break;
+      case "shopSmalltalk": shopSmalltalk(); break;
       // case "getHealingPotion": getHealingPotion(); break;
       // case "getWeapon": getWeapon(); break;
       // case "dontGetWeapon": dontGetWeapon(); break;
@@ -59,7 +66,7 @@ public class Encounter {
   }
 
   public void newEncounter(){
-    this.randomEncounter = (int)Math.floor(Math.random()*10);
+    this.randomEncounter = (int)Math.floor(Math.random()*1);
 
     ui.drawEncounter("","");
     if(randomEncounter == 0){
@@ -78,6 +85,8 @@ public class Encounter {
     newItem = in.getItem(-1);
     ui.drawEncounter("items", newItem.getPath());
     ui.mainTextArea.setText("You see a "+newItem.getName());
+    // player.inventory.add(in.getItem(0).getName());
+    // player.inventory.add(in.getItem(1).getName());
 
     key.z = "getItem";
   }
@@ -93,7 +102,7 @@ public class Encounter {
     }
   }
   private void checkDoor(){
-    ui.mainTextArea.setText("You try to open the door\nIt is locked");
+    ui.mainTextArea.setText("You try to open the door\nIt is locked. Maybe you can open it using a key?");
     if(player.inventory.contains("key")){
       key.z = "openDoor";
     }
@@ -103,6 +112,13 @@ public class Encounter {
     ui.drawStructure("openDoor");
     map.structureLayout[map.y][map.x] = "q";
     ui.mainTextArea.setText("You open door using a key");
+    for (int i = 0; i < player.inventory.size(); i++) {
+      if(player.inventory.get(i).equals("key")){
+        player.inventory.remove(i);
+        break;
+      }
+    }
+
     key.z = "goThruDoor";
   }
 
@@ -115,24 +131,75 @@ public class Encounter {
     }
   }
 
+  private void updateShop(){
+    for(int i = 0; i < shopWeapons; i++){
+      shopInventory.add(in.getWeapon(-1).getIndex());
+    }
+  }
   private void talkToShopkeeper(){
-    ui.mainTextArea.setText("<shopkeeper>\nBuy or sell?");
-    key.z = "buyFormShop";
+    System.out.println(player.getGold());
+    ui.mainTextArea.setText("<shopkeeper>\nWhat do you want?\n\n[z]: buy     [x]: sell     [c]: small talk");
+    key.z = "selectItemsToBuy";
     key.x = "selectItemsToSell";
+    key.c = "shopSmalltalk";
+  }
+  private void shopSmalltalk(){
+    ui.mainTextArea.setText(shopSmalltalk[(int)Math.floor(Math.random()*shopSmalltalk.length)]);
   }
 
-  private void buyFormShop(){
-    ui.mainTextArea.setText("<shopkeeper>\nI don't have anything to sell you");
+  private void selectItemsToBuy(){
+    ui.mainTextArea.setText("<shopkeeper>\nEverything has a price. I can't just give things away for free?");
+    game.pIn = "buyFromShop";
+    ui.selectedButtons.clear();
+    ui.chageButton(null);
+    vm.showchoiceButtons();
+    for(int i = 0; i < ui.buttonList.size()-2; i++){
+      ui.buttonList.get(i).setText(null);
+    }
+    for(int i = 0; i < ui.buttonList.size(); i++){
+      if(i < shopWeapons){
+        ui.buttonList.get(i).setText(in.Weapons.get(shopInventory.get(i)).getType());
+      }
+    }
+    ui.buttonList.get(10).setText("buy");
+    ui.buttonList.get(11).setText("Leave shop");
     key.z = "";
-    key.x = "selectItemsToSell";
+    key.x = "";
+  }
+
+  private void buyFromShop(){
+    key.z = "";
+    key.x = "";
+    if(player.getGold() >= Integer.parseInt(ui.intSellCounterLabel.getText())){
+      if(player.inventory.size() + ui.selectedButtons.size() <= 10){
+        // ui.mainTextArea.setText("<shopkeeper>\nIts a good price, don't you think?");
+        for(int i = ui.selectedButtons.size()-1; i >= 0 ; i--){
+          if(ui.selectedButtons.get(i) <= shopWeapons){
+            shopWeapons--;
+          }
+          System.out.println("wewa");
+          player.inventory.add(ui.buttonList.get(ui.selectedButtons.get(i)).getText());
+          shopInventory.remove(ui.selectedButtons.get(i));
+          ui.selectedButtons.remove(i);
+        }
+        player.subtractGold(Integer.parseInt(ui.intSellCounterLabel.getText()));
+        selectItemsToBuy();
+      } else {
+        ui.mainTextArea.setText("<shopkeeper>\nYou can't carry all this stuff, maybe you want to sell me sothing?");
+      }
+    } else {
+      ui.mainTextArea.setText("<shopkeeper>\nLooks like youre a little short on coin. Don't waste my time");
+    }
+    System.out.println(player.getGold());
   }
 
   private void selectItemsToSell(){
     ui.mainTextArea.setText("<shopkeeper>\nWhat do you want to sell?");
+    game.pIn = "sellToShop";
     vm.showchoiceButtons();
     ui.selectedButtons.clear();
     ui.chageButton(null);
-    for(int i = 0; i < ui.buttonList.size()-1; i++){
+    for(int i = 0; i < ui.buttonList.size()-2; i++){
       ui.buttonList.get(i).setText(null);
     }
     for(int i = 0; i < player.inventory.size(); i++){
@@ -140,27 +207,24 @@ public class Encounter {
     }
     
     ui.buttonList.get(10).setText("Sell");
+    ui.buttonList.get(11).setText("Leave shop");
     key.z = "";
     key.x = "";
   }
 
-  private void sellItemsToShop(){
+  private void sellToShop(){
     ui.mainTextArea.setText("<shopkeeper>\nWhat a steal.");
 
-    System.out.println(player.inventory.size());
-    for (Iterator<String> it = player.inventory.iterator(); it.hasNext();) {
-      String name = it.next();
-      for(int i = 0; i < ui.selectedButtons.size(); i++){
-
-        if(name.equals(ui.buttonList.get(ui.selectedButtons.get(i)).getText())){
-          it.remove();
-          ui.selectedButtons.remove(i);
+    for (int i = player.inventory.size()-1; i >= 0; i--) {
+      for(int j = 0; j < ui.selectedButtons.size(); j++){
+        if(player.inventory.get(i).equals(ui.buttonList.get(ui.selectedButtons.get(j)).getText())){
+          ui.selectedButtons.remove(j);
+          player.inventory.remove(i);
           player.addGold(Integer.parseInt(ui.intSellCounterLabel.getText()));
+          break;
         }
       }
     }
-
-    System.out.println(player.inventory);
     System.out.println(player.getGold());
     selectItemsToSell();
   }
@@ -171,7 +235,7 @@ public class Encounter {
     for(int i = 0; i < player.inventory.size(); i++){
       ui.buttonList.get(i).setText(player.inventory.get(i));
     }
-    key.z = "buyFormShop";
+    key.z = "selectItemsToBuy";
     key.x = "selectItemsToSell";
   }
 }
