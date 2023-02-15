@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 public class Game {
   private Player player;
-  private UI ui = new UI(this, player);
+  private UI ui = new UI(this);
   private VisibilityManager vm = new VisibilityManager(ui);
   private ChoiceHandler cHandler = new ChoiceHandler();
   private Map map;
@@ -69,6 +69,7 @@ public class Game {
       // e.printStackTrace();
     }
     ui.addGameInventory(in);
+    ui.addPlayer(player);
     vm.showGamescreen();
     e = new Encounter(ui, player, in, vm, this);
     ui.addEncounter(e);

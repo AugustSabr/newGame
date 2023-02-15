@@ -1,8 +1,8 @@
 key
 key
-50
 1
+50
 broken bow
 placeholder
-35
 1
+35

@@ -68,7 +68,8 @@ public class UI {
 
   ArrayList<Integer> selectedButtons = new ArrayList<>();
   public void selctbutton(int me){
-    if(en.buttonPanalUse == "shop"){
+    itemInfoPanel.setVisible(false);
+    if(en.buttonPanalUse == "shopBuy" || en.buttonPanalUse == "shopSell"){
       if(!buttonCheck(me)){
         selectedButtons.add(me);
       }
@@ -96,8 +97,9 @@ public class UI {
           itemInfoLabelList.get(k).setText(in.Weapons.get(i).getType());k++;
           itemInfoLabelList.get(k).setText("Damage:");k++;
           itemInfoLabelList.get(k).setText(in.Weapons.get(i).getDamage()+"");k++;
-          itemInfoLabelList.get(k).setText("Value");k++;
-          itemInfoLabelList.get(k).setText(in.Weapons.get(i).getValue()+"");
+          itemInfoLabelList.get(k).setText("Value:");k++;
+          itemInfoLabelList.get(k).setText(in.Weapons.get(i).getValue()+" gold");
+          itemInfoPanel.setVisible(true);
           break;
         } else {
           buttonList.get(10).setText("");
@@ -108,19 +110,32 @@ public class UI {
           int k = 0;
           itemInfoLabelList.get(k).setText("Name:");k++;
           itemInfoLabelList.get(k).setText(in.Items.get(i).getName());k++;
-          itemInfoLabelList.get(k).setText("Value");k++;
-          itemInfoLabelList.get(k).setText(in.Items.get(i).getValue()+"");
+          itemInfoLabelList.get(k).setText("Value:");k++;
+          itemInfoLabelList.get(k).setText(in.Items.get(i).getValue()+" gold");
+          itemInfoPanel.setVisible(true);
           break;
         }
       }
     }
     drawButtons();
-    // System.out.println(selectedButtons);
   }
   public void drawButtons(){
+    if(en.buttonPanalUse == "inventory" && selectedButtons.size() == 0){
+      buttonList.get(10).setText("");
+      game.c10 = "";
+    }
     for(int i = 0; i < buttonList.size(); i++){
       buttonList.get(i).setBorder(BorderFactory.createLineBorder(Color.white, 1));
     }
+
+    if(en.buttonPanalUse == "inventory" || en.buttonPanalUse == "shopSell"){
+      for(int i = 0; i < player.inventory.size(); i++){
+        if(player.inventory.get(i) == player.getMyWeapon()){
+          buttonList.get(i).setBorder(BorderFactory.createLineBorder(Color.green, 4));
+        }
+      }
+    }
+
     for(int i = 0; i < selectedButtons.size(); i++){
       buttonList.get(selectedButtons.get(i)).setBorder(BorderFactory.createLineBorder(Color.red, 4));
     }
@@ -130,7 +145,7 @@ public class UI {
   public boolean buttonCheck(int check) {
     for(int i = 0; i < selectedButtons.size(); i++){
       if(selectedButtons.get(i) == check){
-        // selectedButtons.remove(i);
+        selectedButtons.remove(i);
         return true;
       }
     }
@@ -157,15 +172,15 @@ public class UI {
     }
     intShopCounterLabel.setText(""+sum);
   }
-  public UI(Game g, Player p) {
+  public UI(Game g) {
     game = g;
+  }
+  public void addPlayer(Player p) {
     player = p;
   }
   public void addGameInventory(GameInventory ga) {
     in = ga;
   }
-
-
   public void addEncounter(Encounter e) {
     en = e;
   }

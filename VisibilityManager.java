@@ -44,7 +44,6 @@ public class VisibilityManager {
     ui.choiceButtonPanel.setVisible(false);
     ui.itemInfoPanel.setVisible(false);
 
-    // System.out.println(ui.window.getFocusOwner());
   }
   public void showGamescreen(){
     //titlescreen
@@ -68,7 +67,7 @@ public class VisibilityManager {
   public void showchoiceButtons(){
     ui.statPanel.setVisible(false);
     ui.choiceButtonPanel.setVisible(true);
-    ui.itemInfoPanel.setVisible(true);
+    ui.itemInfoPanel.setVisible(false);
     key.keyEffect = "inventory";
   }
   public void dontShowchoiceButtons(){

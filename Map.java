@@ -57,100 +57,54 @@ public class Map {
   public void move(String s){
     key.z = "";
     key.x = "";
-    ui.mainTextArea.setText("");
+    key.c = "openInventory";
     switch(s){
       case "up":
         if(ui.roomImgLabel.getIcon().toString().equals("img/rooms/crossroad.png") || ui.roomImgLabel.getIcon().toString().equals("img/rooms/front.png") || ui.roomImgLabel.getIcon().toString().equals("img/rooms/frontRight.png") || ui.roomImgLabel.getIcon().toString().equals("img/rooms/frontLeft.png")){
           switch(facing){
-            case "north": y=y-1; structure = structureLayout[y][x];
-              if(structure == " "){
-                en.newEncounter();
-              } draw(); break;
-            case "south": y++; structure = structureLayout[y][x];
-              if(structure == " "){
-                en.newEncounter();
-              } draw(); break;
-            case "east": x++; structure = structureLayout[y][x];
-              if(structure == " "){
-                en.newEncounter();
-              } draw(); break;
-            case "west": x=x-1; structure = structureLayout[y][x];
-              if(structure == " "){
-                en.newEncounter();
-              } draw(); break;
+            case "north": y=y-1; structure = structureLayout[y][x]; draw(); break;
+            case "south": y++; structure = structureLayout[y][x]; draw(); break;
+            case "east": x++; structure = structureLayout[y][x]; draw(); break;
+            case "west": x=x-1; structure = structureLayout[y][x]; draw(); break;
           }
         }break;
       case "down":
       if(position == "a" && facing == "south" || position == "b" && facing == "west" || position == "c" && facing == "north" || position == "d" && facing == "east"){}else{
         switch(facing){
-          case "north": y++; facing="south"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
-          case "south": y=y-1; facing="north"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
-          case "east": x=x-1; facing="west"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
-          case "west": x++; facing="east"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
+          case "north": y++; facing="south"; structure = structureLayout[y][x]; draw(); break;
+          case "south": y=y-1; facing="north"; structure = structureLayout[y][x]; draw(); break;
+          case "east": x=x-1; facing="west"; structure = structureLayout[y][x]; draw(); break;
+          case "west": x++; facing="east"; structure = structureLayout[y][x]; draw(); break;
         }
       } break;
       case "right":
       if(ui.roomImgLabel.getIcon().toString().equals("img/rooms/crossroad.png") || ui.roomImgLabel.getIcon().toString().equals("img/rooms/frontRight.png") || ui.roomImgLabel.getIcon().toString().equals("img/rooms/right.png") || ui.roomImgLabel.getIcon().toString().equals("img/rooms/t-intersection.png")){
         switch(facing){
-          case "north": x++; facing="east"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
-          case "south": x=x-1; facing="west"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
-          case "east": y++; facing="south"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
-          case "west": y=y-1; facing="north"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
+          case "north": x++; facing="east"; structure = structureLayout[y][x]; draw(); break;
+          case "south": x=x-1; facing="west"; structure = structureLayout[y][x]; draw(); break;
+          case "east": y++; facing="south"; structure = structureLayout[y][x]; draw(); break;
+          case "west": y=y-1; facing="north"; structure = structureLayout[y][x]; draw(); break;
         }
       }break;
       case "left":
       if(ui.roomImgLabel.getIcon().toString().equals("img/rooms/crossroad.png") || ui.roomImgLabel.getIcon().toString().equals("img/rooms/frontLeft.png") || ui.roomImgLabel.getIcon().toString().equals("img/rooms/left.png") || ui.roomImgLabel.getIcon().toString().equals("img/rooms/t-intersection.png")){
         switch(facing){
-          case "north": x=x-1; facing="west"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
-          case "south": x++; facing="east"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
-          case "east": y=y-1; facing="north"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
-          case "west": y++; facing="south"; structure = structureLayout[y][x];
-            if(structure == " "){
-              en.newEncounter();
-            } draw(); break;
+          case "north": x=x-1; facing="west"; structure = structureLayout[y][x]; draw(); break;
+          case "south": x++; facing="east"; structure = structureLayout[y][x]; draw(); break;
+          case "east": y=y-1; facing="north"; structure = structureLayout[y][x]; draw(); break;
+          case "west": y++; facing="south"; structure = structureLayout[y][x]; draw(); break;
         }
       }break;
     }
   }
 
   public void draw(){
+    ui.mainTextArea.setText("");
     structure = structureLayout[y][x];
     position = mapLayout[y][x];
     ui.drawRoom("blackScreen");
     ui.drawStructure("");
+    ui.drawEncounter("","");
 
     Timer timer = new Timer(100, (ActionListener) new ActionListener() {
       public void actionPerformed(ActionEvent e){
@@ -223,8 +177,8 @@ public class Map {
             } break;
           case "o": ui.drawRoom("crossroad");break;
         }
-        if(structure != " "){
-          en.noEncounter();
+        if(structure == " "){
+          en.newEncounter();
         }
         switch(structure){
           case "p": ui.drawStructure("door"); key.z = "checkDoor"; break;
@@ -234,12 +188,6 @@ public class Map {
       }
     }); timer.setRepeats(false);
     timer.start();    
-    // System.out.println(ui.roomImgLabel.getIcon());
-    // System.out.println();
-    // System.out.println(x+" "+y);
-    // System.out.println(structure);
-    // System.out.println(position);
-    // System.out.println(facing);
   }
 
   public String getFacing() {

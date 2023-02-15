@@ -70,8 +70,5 @@ public class _KeyListener implements KeyListener {
     if (e.getKeyCode() == KeyEvent.VK_C) {
       en.selectPosition(c);
     }
-    // System.out.println(z);
-    // System.out.println(x);
-    // System.out.println(c);
   }
 }

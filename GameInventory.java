@@ -15,19 +15,17 @@ public class GameInventory {
 
   public GameInventory(){
     for (int i = 0; i < categories.length; i++){
-      int index = 0;
       try {
         File myObj = new File("localFiles/" + categories[i] + ".txt");//henter info fra relevant fil
         Scanner myReader = new Scanner(myObj);
         while (myReader.hasNextLine()) {
           switch(categories[i]){//lager objects av all infoen i filen
-            case "weapon": Weapons.add(new Weapon(myReader.nextLine(), myReader.nextLine(),Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), index)); break;
-            case "item": Items.add(new Item(myReader.nextLine(), myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), index)); break;
+            case "weapon": Weapons.add(new Weapon(myReader.nextLine(), myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()))); break;
+            case "item": Items.add(new Item(myReader.nextLine(), myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()))); break;
             // case "armor": Armors.add(new Armor(myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()))); break;
             // case "blessing": Blessings.add(new Blessing(myReader.nextLine(), Integer.parseInt(myReader.nextLine()))); break;
             case "enemy": Monsters.add(new Monster(this, myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()))); break;
           }
-          index++;
         }
         myReader.close();
       } catch (Exception e) {
@@ -37,30 +35,37 @@ public class GameInventory {
       }
     }
   }
-
+  
   public Weapon getWeapon(int i) {
+    Weapon w1;
+    Weapon w2;
     if (i == -1){//hvis du kaller med en annen verdi får du våpenet med den indexen
       // this.floor = Room.getDungeonFloor();
-      Weapon w = Weapons.get((int)(Math.floor(Math.random() * Weapons.size())));
-      while(w.getTier() > this.floor){//passer på at funkjsonen ikke returnerer et våpen men forhøy tier
-        w = Weapons.get((int)(Math.floor(Math.random() * Weapons.size())));
+      w1 = Weapons.get((int)(Math.floor(Math.random() * Weapons.size())));
+      while(w1.getTier() > this.floor){//passer på at funkjsonen ikke returnerer et våpen men forhøy tier
+        w1 = Weapons.get((int)(Math.floor(Math.random() * Weapons.size())));
       }
-      return w;
+      w2 = new Weapon(w1.getType(), w1.getPath(), w1.getTier(), w1.getDamage(), w1.getValue());
+      return w2;
     } else {
-      return Weapons.get(i);
+      w1 = Weapons.get(i);
+      w2 = new Weapon(w1.getType(), w1.getPath(), w1.getTier(), w1.getDamage(), w1.getValue());
+      return w2;
     }
   }
 
   public Item getItem(int i) {
+    Item i1;
+    Item i2;
     if (i == -1){//hvis du kaller med en annen verdi får du våpenet med den indexen
       // this.floor = Room.getDungeonFloor();
-      Item it = Items.get((int)(Math.floor(Math.random() * Items.size())));
-      while(it.getTier() > this.floor){//passer på at funkjsonen ikke returnerer et våpen men forhøy tier
-        it = Items.get((int)(Math.floor(Math.random() * Items.size())));
-      }
-      return it;
+      i1 = Items.get((int)(Math.floor(Math.random() * Items.size())));
+      i2 = new Item(i1.getName(), i1.getPath(), i1.getTier(), i1.getValue());
+      return i2;
     } else {
-      return Items.get(i);
+      i1 = Items.get(i);
+      i2 = new Item(i1.getName(), i1.getPath(), i1.getTier(), i1.getValue());
+      return i2;
     }
   }
 

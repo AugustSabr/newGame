@@ -48,6 +48,7 @@ public class Encounter {
   }
   public void addKeyListener(_KeyListener k) {
     key = k;
+    key.c = "openInventory";
   }
   public void addMap(Map m){
     map = m;
@@ -86,8 +87,7 @@ public class Encounter {
   }
 
   public void newEncounter(){
-    key.c = "openInventory";
-    this.randomEncounter = (int)Math.floor(Math.random()*3);
+    this.randomEncounter = (int)Math.floor(Math.random()*2);
 
     ui.drawEncounter("","");
     if(randomEncounter == 0){
@@ -154,20 +154,22 @@ public class Encounter {
   }
 
   private void drop(){
-    player.inventory.remove((int)ui.selectedButtons.get(0));
-    System.out.println(player.inventory);
+    if(ui.selectedButtons.size() != 0){
+      if(player.inventory.get((int)ui.selectedButtons.get(0)) == player.getMyWeapon()){
+      player.setMyWeapon(null);
+      }
+      player.inventory.remove((int)ui.selectedButtons.get(0));
+    }
     openInventory();
   }
 
   private void equipWeapon(){
-    for(int i = 0; i < in.Weapons.size(); i++){
-      if(in.Weapons.get(i).getType() == ui.buttonList.get((int)ui.selectedButtons.get(0)).getText()){
-        player.setMyWeapon(in.getWeapon(i));
-        // player.weaponIndex = 1;
+    for(int i = 0; i < player.inventory.size(); i++){
+      if(player.getInventoryString(i) == ui.buttonList.get((int)ui.selectedButtons.get(0)).getText()){
+        player.setMyWeapon((Weapon)player.inventory.get(ui.selectedButtons.get(0)));
         break;
       }
     }
-    System.out.println(player.getMyWeapon());
     openInventory();
   }
 
@@ -243,6 +245,7 @@ public class Encounter {
   private void updateShop(){
     shopWeapons = (int)Math.floor(Math.random()*3) + 1;
     shopItems = (int)Math.floor(Math.random()*3) + 1;
+
   
     for(int i = 0; i < shopWeapons; i++){
       shopInventory.add(in.getWeapon(-1));
@@ -252,13 +255,11 @@ public class Encounter {
     }
   }
   private void talkToShopkeeper(){
-    System.out.println(player.getGold());
     ui.mainTextArea.setText("<shopkeeper>\nWhat do you want?\n\n[z]: buy     [x]: sell     [c]: small talk");
     key.z = "selectItemsToBuy";
     key.x = "selectItemsToSell";
     key.c = "shopSmalltalk";
     game.c11 = "leaveShop";
-    buttonPanalUse = "shop";
     ui.buttonList.get(10).setText("");
   }
   private void shopSmalltalk(){
@@ -266,6 +267,7 @@ public class Encounter {
   }
 
   private void selectItemsToBuy(){
+    buttonPanalUse = "shopBuy";
     ui.mainTextArea.setText("<shopkeeper>\nEverything has a price. I can't just give things away for free?");
     game.c10 = "buyFromShop";
     ui.selectedButtons.clear();
@@ -299,7 +301,6 @@ public class Encounter {
             }
           }
         }
-        System.out.println(shopInventory);
         player.subtractGold(Integer.parseInt(ui.intShopCounterLabel.getText()));
         selectItemsToBuy();
       } else {
@@ -308,10 +309,10 @@ public class Encounter {
     } else {
       ui.mainTextArea.setText("<shopkeeper>\nLooks like youre a little short on coin. Don't waste my time");
     }
-    System.out.println(player.getGold());
   }
 
   private void selectItemsToSell(){
+    buttonPanalUse = "shopSell";
     ui.mainTextArea.setText("<shopkeeper>\nWhat do you want to sell?");
     game.c10 = "sellToShop";
     vm.showchoiceButtons();
@@ -333,10 +334,13 @@ public class Encounter {
 
   private void sellToShop(){
     // ui.mainTextArea.setText("<shopkeeper>\nWhat a steal.");
-
+    System.out.println("wawa");
     for (int i = player.inventory.size()-1; i >= 0; i--) {
       for(int j = 0; j < ui.selectedButtons.size(); j++){
         if(player.getInventoryString(i).equals(ui.buttonList.get(ui.selectedButtons.get(j)).getText())){
+          if(player.inventory.get(i) == player.getMyWeapon()){
+            player.setMyWeapon(null);
+          }
           ui.selectedButtons.remove(j);
           player.inventory.remove(i);
           break;
@@ -344,7 +348,6 @@ public class Encounter {
       }
     }
     player.addGold(Integer.parseInt(ui.intShopCounterLabel.getText()));
-    System.out.println(player.getGold());
     selectItemsToSell();
   }
 
