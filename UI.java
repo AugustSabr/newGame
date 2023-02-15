@@ -130,7 +130,7 @@ public class UI {
   public boolean buttonCheck(int check) {
     for(int i = 0; i < selectedButtons.size(); i++){
       if(selectedButtons.get(i) == check){
-        selectedButtons.remove(i);
+        // selectedButtons.remove(i);
         return true;
       }
     }

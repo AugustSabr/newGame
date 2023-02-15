@@ -9,14 +9,27 @@ public class Player{
     Speed = 15,
     endurance = 20,
     luck = 5,
-    gold = 0;
-    private Weapon weapon;
-    public int weaponIndex;
+    gold = 1000;
+    private Weapon myWeapon;
+    // public int weaponIndex;
+
     // private Armor armor;
     // private Blessing blessing;
 
-    ArrayList<String> inventory = new ArrayList<String>();
+    ArrayList<Object> inventory = new ArrayList<Object>();
   
+    public String getInventoryString(int i) {
+      if(inventory.get(i).getClass() == Weapon.class){
+        Weapon weapon = (Weapon) inventory.get(i);
+        return weapon.getType();
+      }
+      if(inventory.get(i).getClass() == Item.class){
+        Item item = (Item) inventory.get(i);
+        return item.getName();
+      }
+      return null;
+    }
+
     public Player(String name){
       this.name = name;
     }
@@ -72,12 +85,12 @@ public class Player{
       return strength;
     }
   
-    public void setWeapon(Weapon weapon){
-      this.weapon = weapon;
+    public void setMyWeapon(Weapon weapon){
+      this.myWeapon = weapon;
     }
-    public Weapon getWeapon(){
-      if (this.weapon != null){
-        return this.weapon;
+    public Weapon getMyWeapon(){
+      if (this.myWeapon != null){
+        return this.myWeapon;
       }
       else{
         return null;

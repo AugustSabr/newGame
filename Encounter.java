@@ -16,7 +16,20 @@ public class Encounter {
 
   public String buttonPanalUse = "inventory";
 
-  ArrayList<Integer> shopInventory = new ArrayList<>();
+  ArrayList<Object> shopInventory = new ArrayList<Object>();
+  
+  public String getshopInventoryString(int i) {
+    if(shopInventory.get(i).getClass() == Weapon.class){
+      Weapon weapon = (Weapon) shopInventory.get(i);
+      return weapon.getType();
+    }
+    if(shopInventory.get(i).getClass() == Item.class){
+      Item item = (Item) shopInventory.get(i);
+      return item.getName();
+    }
+    return null;
+  }
+
   private int shopWeapons;
   private int shopItems;
 
@@ -119,7 +132,7 @@ public class Encounter {
       ui.buttonList.get(i).setText(null);
     }
     for(int i = 0; i < player.inventory.size(); i++){
-      ui.buttonList.get(i).setText(player.inventory.get(i));
+      ui.buttonList.get(i).setText(player.getInventoryString(i));
     }
     ui.drawButtons();
     ui.buttonList.get(11).setText("Drop");
@@ -149,12 +162,12 @@ public class Encounter {
   private void equipWeapon(){
     for(int i = 0; i < in.Weapons.size(); i++){
       if(in.Weapons.get(i).getType() == ui.buttonList.get((int)ui.selectedButtons.get(0)).getText()){
-        player.setWeapon(in.getWeapon(i));
-        player.weaponIndex = 1;
+        player.setMyWeapon(in.getWeapon(i));
+        // player.weaponIndex = 1;
         break;
       }
     }
-    System.out.println(player.getWeapon());
+    System.out.println(player.getMyWeapon());
     openInventory();
   }
 
@@ -169,7 +182,7 @@ public class Encounter {
     if(player.inventory.size() >= 10){
       ui.mainTextArea.setText("you carry to many items");
     } else {
-      player.inventory.add(newItem.getName());
+      player.inventory.add(newItem);
       ui.mainTextArea.setText(newItem.getName()+" is now in youre inventory");
       ui.drawEncounter("","");
       key.z = "";
@@ -187,7 +200,7 @@ public class Encounter {
     if(player.inventory.size() >= 10){
       ui.mainTextArea.setText("you carry to many items");
     } else {
-      player.inventory.add(newWeapon.getType());
+      player.inventory.add(newWeapon);
       ui.mainTextArea.setText(newWeapon.getType()+" is now in youre inventory");
       ui.drawEncounter("","");
       key.z = "";
@@ -196,8 +209,11 @@ public class Encounter {
 
   private void checkDoor(){
     ui.mainTextArea.setText("You try to open the door\nIt is locked. Maybe you can open it using a key?");
-    if(player.inventory.contains("key")){
-      key.z = "openDoor";
+    for (int i = 0; i < player.inventory.size(); i++) {
+      if(player.getInventoryString(i).equals("key")){
+        key.z = "openDoor";
+        break;
+      }
     }
   }
 
@@ -206,7 +222,7 @@ public class Encounter {
     map.structureLayout[map.y][map.x] = "q";
     ui.mainTextArea.setText("You open door using a key");
     for (int i = 0; i < player.inventory.size(); i++) {
-      if(player.inventory.get(i).equals("key")){
+      if(player.getInventoryString(i).equals("key")){
         player.inventory.remove(i);
         break;
       }
@@ -229,10 +245,10 @@ public class Encounter {
     shopItems = (int)Math.floor(Math.random()*3) + 1;
   
     for(int i = 0; i < shopWeapons; i++){
-      shopInventory.add(in.getWeapon(-1).getIndex());
+      shopInventory.add(in.getWeapon(-1));
     }
     for(int i = 0; i < shopItems; i++){
-      shopInventory.add(in.getItem(-1).getIndex());
+      shopInventory.add(in.getItem(-1));
     }
   }
   private void talkToShopkeeper(){
@@ -258,12 +274,8 @@ public class Encounter {
     for(int i = 0; i < ui.buttonList.size()-2; i++){
       ui.buttonList.get(i).setText(null);
     }
-    for(int i = 0; i < ui.buttonList.size(); i++){
-      if(i < shopWeapons){
-        ui.buttonList.get(i).setText(in.Weapons.get(shopInventory.get(i)).getType());
-      }else if(i < shopItems + shopWeapons){
-        ui.buttonList.get(i).setText(in.Items.get(shopInventory.get(i)).getName());
-      }
+    for(int i = 0; i < shopInventory.size(); i++){
+      ui.buttonList.get(i).setText(getshopInventoryString(i));
     }
     ui.stringShopCounterLabel.setText("Buy:");
     ui.updateSellCounter();
@@ -273,19 +285,21 @@ public class Encounter {
   }
 
   private void buyFromShop(){
-    key.z = "";
-    key.x = "";
+
     if(player.getGold() >= Integer.parseInt(ui.intShopCounterLabel.getText())){
       if(player.inventory.size() + ui.selectedButtons.size() <= 10){
         // ui.mainTextArea.setText("<shopkeeper>\nIts a good price, don't you think?");
-        for(int i = ui.selectedButtons.size()-1; i >= 0 ; i--){
-          if(ui.selectedButtons.get(i) <= shopWeapons){
-            shopWeapons--;
+        for (int i = shopInventory.size()-1; i >= 0; i--) {
+          for(int j = 0; j < ui.selectedButtons.size(); j++){
+            if(getshopInventoryString(i).equals(ui.buttonList.get(ui.selectedButtons.get(j)).getText())){
+              ui.selectedButtons.remove(j);
+              player.inventory.add(shopInventory.get(i));
+              shopInventory.remove(i);
+              break;
+            }
           }
-          System.out.println("wewa");
-          player.inventory.add(ui.buttonList.get(ui.selectedButtons.get(i)).getText());
-          shopInventory.remove(ui.selectedButtons.get(i));
         }
+        System.out.println(shopInventory);
         player.subtractGold(Integer.parseInt(ui.intShopCounterLabel.getText()));
         selectItemsToBuy();
       } else {
@@ -307,7 +321,7 @@ public class Encounter {
       ui.buttonList.get(i).setText(null);
     }
     for(int i = 0; i < player.inventory.size(); i++){
-      ui.buttonList.get(i).setText(player.inventory.get(i));
+      ui.buttonList.get(i).setText(player.getInventoryString(i));
     }
     
     ui.stringShopCounterLabel.setText("Sell:");
@@ -318,11 +332,11 @@ public class Encounter {
   }
 
   private void sellToShop(){
-    ui.mainTextArea.setText("<shopkeeper>\nWhat a steal.");
+    // ui.mainTextArea.setText("<shopkeeper>\nWhat a steal.");
 
     for (int i = player.inventory.size()-1; i >= 0; i--) {
       for(int j = 0; j < ui.selectedButtons.size(); j++){
-        if(player.inventory.get(i).equals(ui.buttonList.get(ui.selectedButtons.get(j)).getText())){
+        if(player.getInventoryString(i).equals(ui.buttonList.get(ui.selectedButtons.get(j)).getText())){
           ui.selectedButtons.remove(j);
           player.inventory.remove(i);
           break;
