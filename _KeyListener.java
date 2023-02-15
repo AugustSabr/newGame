@@ -5,8 +5,7 @@ public class _KeyListener implements KeyListener {
   private Map map;
   private UI ui;
   private Encounter en;
-  public String z = "", x = "", c = "";
-  public Boolean walking = true, inventory = false;
+  public String z = "", x = "", c = "", keyEffect = "walking";
 
   public _KeyListener(Map m, UI u, Encounter e) {
     map = m;
@@ -27,53 +26,49 @@ public class _KeyListener implements KeyListener {
   @Override
   public void keyReleased(KeyEvent e) {
     if (e.getKeyCode() == KeyEvent.VK_UP) {
-      if(walking){
+      if(keyEffect == "walking"){
         map.move("up");
       }
-      if(inventory){
+      if(keyEffect == "inventory"){
         ui.chageButton("up");
       }
     }
     if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-      if(walking){
+      if(keyEffect == "walking"){
         map.move("down");
       }
-      if(inventory){
+      if(keyEffect == "inventory"){
         ui.chageButton("down");
       }
     }
     if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-      if(walking){
+      if(keyEffect == "walking"){
         map.move("right");
       }
-      if(inventory){
+      if(keyEffect == "inventory"){
         ui.chageButton("right");
       }    }
     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-      if(walking){
+      if(keyEffect == "walking"){
         map.move("left");
       }
-      if(inventory){
+      if(keyEffect == "inventory"){
         ui.chageButton("left");
       }
     }
 
     if (e.getKeyCode() == KeyEvent.VK_Z) {
-      if(walking){
+      if(keyEffect == "walking"){
         en.selectPosition(z);
-      }else if(inventory){
+      }else if(keyEffect == "inventory"){
         ui.buttonList.get(ui.pos).doClick();
       }
     }
     if (e.getKeyCode() == KeyEvent.VK_X) {
-      if(walking){
-        en.selectPosition(x);
-      }
+      en.selectPosition(x);
     }
     if (e.getKeyCode() == KeyEvent.VK_C) {
-      if(walking){
-        en.selectPosition(c);
-      }
+      en.selectPosition(c);
     }
     // System.out.println(z);
     // System.out.println(x);

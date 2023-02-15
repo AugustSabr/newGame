@@ -1,7 +1,3 @@
-import javax.swing.BorderFactory;
-import java.awt.Color;
-
-
 //ender på va som er synlig
 public class VisibilityManager {
   private UI ui;
@@ -26,8 +22,9 @@ public class VisibilityManager {
     ui.encounterImgLabel.setVisible(false);
     ui.roomImgLabel.setVisible(false);
     ui.mainTextPanel.setVisible(false);
+    ui.statPanel.setVisible(false);
     ui.choiceButtonPanel.setVisible(false);
-    ui.sellCounterPanel.setVisible(false);
+    ui.itemInfoPanel.setVisible(false);
 
   }
   public void enterName(){
@@ -43,8 +40,9 @@ public class VisibilityManager {
     ui.encounterImgLabel.setVisible(false);
     ui.roomImgLabel.setVisible(false);
     ui.mainTextPanel.setVisible(true);
+    ui.statPanel.setVisible(false);
     ui.choiceButtonPanel.setVisible(false);
-    ui.sellCounterPanel.setVisible(false);
+    ui.itemInfoPanel.setVisible(false);
 
     // System.out.println(ui.window.getFocusOwner());
   }
@@ -63,18 +61,20 @@ public class VisibilityManager {
     ui.encounterImgLabel.setVisible(true);
     ui.roomImgLabel.setVisible(true);
     ui.mainTextPanel.setVisible(true);
+    ui.statPanel.setVisible(true);
     ui.choiceButtonPanel.setVisible(false);
+    ui.itemInfoPanel.setVisible(false);
   }
   public void showchoiceButtons(){
+    ui.statPanel.setVisible(false);
     ui.choiceButtonPanel.setVisible(true);
-    ui.sellCounterPanel.setVisible(true);
-    key.walking = false;
-    key.inventory = true;
+    ui.itemInfoPanel.setVisible(true);
+    key.keyEffect = "inventory";
   }
   public void dontShowchoiceButtons(){
+    ui.statPanel.setVisible(true);
     ui.choiceButtonPanel.setVisible(false);
-    ui.sellCounterPanel.setVisible(false);
-    key.walking = true;
-    key.inventory = false;
+    ui.itemInfoPanel.setVisible(false);
+    key.keyEffect = "walking";
   }
 }

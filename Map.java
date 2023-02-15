@@ -57,7 +57,6 @@ public class Map {
   public void move(String s){
     key.z = "";
     key.x = "";
-    key.c = "";
     ui.mainTextArea.setText("");
     switch(s){
       case "up":
@@ -66,19 +65,19 @@ public class Map {
             case "north": y=y-1; structure = structureLayout[y][x];
               if(structure == " "){
                 en.newEncounter();
-              } break;
+              } draw(); break;
             case "south": y++; structure = structureLayout[y][x];
               if(structure == " "){
                 en.newEncounter();
-              } break;
+              } draw(); break;
             case "east": x++; structure = structureLayout[y][x];
               if(structure == " "){
                 en.newEncounter();
-              } break;
+              } draw(); break;
             case "west": x=x-1; structure = structureLayout[y][x];
               if(structure == " "){
                 en.newEncounter();
-              } break;
+              } draw(); break;
           }
         }break;
       case "down":
@@ -87,19 +86,19 @@ public class Map {
           case "north": y++; facing="south"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
           case "south": y=y-1; facing="north"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
           case "east": x=x-1; facing="west"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
           case "west": x++; facing="east"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
         }
       } break;
       case "right":
@@ -108,19 +107,19 @@ public class Map {
           case "north": x++; facing="east"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
           case "south": x=x-1; facing="west"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
           case "east": y++; facing="south"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
           case "west": y=y-1; facing="north"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
         }
       }break;
       case "left":
@@ -129,195 +128,22 @@ public class Map {
           case "north": x=x-1; facing="west"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
           case "south": x++; facing="east"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
           case "east": y=y-1; facing="north"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
           case "west": y++; facing="south"; structure = structureLayout[y][x];
             if(structure == " "){
               en.newEncounter();
-            } break;
+            } draw(); break;
         }
       }break;
     }
-
-    // switch(facing){
-    //   case "north":
-    //     String[] northUp = {"c", "e", "k", "m", "o"};
-    //     String[] northDown = {"a", "e", "h", "i", "k", "l", "m", "o"};
-    //     String[] northRight = {"h", "k", "l", "o"};
-    //     String[] northLeft = {"i", "l", "m", "o"};
-    //     switch(s){
-    //       case "up":
-    //         for(int i = 0; i < northUp.length; i++){
-    //           if(position == northUp[i]){
-    //             y=y-1;
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //       case "down":
-    //         for(int i = 0; i < northDown.length; i++){
-    //           if(position == northDown[i]){
-    //             y++;
-    //             facing="south";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //       case "right":
-    //         for(int i = 0; i < northRight.length; i++){
-    //           if(position == northRight[i]){
-    //             x++;
-    //             facing="east";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //       case "left":
-    //         for(int i = 0; i < northLeft.length; i++){
-    //           if(position == northLeft[i]){
-    //             x=x-1;
-    //             facing="west";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //     } break;
-
-    //   case "south":
-    //     String[] southUp = {"a", "e", "k", "m", "o"};
-    //     String[] southDown = {"c", "e", "g", "j", "k", "m", "n", "o"};
-    //     String[] southRight = {"j", "m", "n", "o"};
-    //     String[] southLeft = {"g", "k", "n", "o"};
-    //     switch(s){
-    //       case "up":
-    //         for(int i = 0; i < southUp.length; i++){
-    //           if(position == southUp[i]){
-    //             y++;
-    //           }
-    //         } break;
-    //       case "down":
-    //         for(int i = 0; i < southDown.length; i++){
-    //           if(position == southDown[i]){
-    //             y=y-1;
-    //             facing="north";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //       case "right":
-    //         for(int i = 0; i < southRight.length; i++){
-    //           if(position == southRight[i]){
-    //             x=x-1;
-    //             facing="west";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //       case "left":
-    //         for(int i = 0; i < southLeft.length; i++){
-    //           if(position == southLeft[i]){
-    //             x++;
-    //             facing="east";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //     } break;
-
-    //   case "east":
-    //     String[] eastUp = {"d", "f", "l", "n", "o"};
-    //     String[] eastDown = {"b", "f", "i", "j", "l", "m", "n", "o"};
-    //     String[] eastRight = {"i", "l", "m", "o"};
-    //     String[] eastLeft = {"j", "m", "n", "o"};
-    //     switch(s){
-    //       case "up":
-    //         for(int i = 0; i < eastUp.length; i++){
-    //           if(position == eastUp[i]){
-    //             x++;
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //       case "down":
-    //         for(int i = 0; i < eastDown.length; i++){
-    //           if(position == eastDown[i]){
-    //             x=x-1;
-    //             facing="west";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //       case "right":
-    //         for(int i = 0; i < eastRight.length; i++){
-    //           if(position == eastRight[i]){
-    //             y++;
-    //             facing="south";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //       case "left":
-    //         for(int i = 0; i < eastLeft.length; i++){
-    //           if(position == eastLeft[i]){
-    //             y=y-1;
-    //             facing="north";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //     } break;
-
-    //   case "west":
-    //     String[] westUp = {"b", "f", "l", "n", "o"};
-    //     String[] westDown = {"d", "f", "g", "h", "k", "l", "n", "o"};
-    //     String[] westRight = {"g", "k", "n", "o"};
-    //     String[] westLeft = {"h", "k", "l", "o"};
-    //     switch(s){
-    //       case "up":
-    //         for(int i = 0; i < westUp.length; i++){
-    //           if(position == westUp[i]){
-    //             x=x-1;
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //       case "down":
-    //         for(int i = 0; i < westDown.length; i++){
-    //           if(position == westDown[i]){
-    //             x++;
-    //             facing="east";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //       case "right":
-    //         for(int i = 0; i < westRight.length; i++){
-    //           if(position == westRight[i]){
-    //             y=y-1;
-    //             facing="north";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //       case "left":
-    //         for(int i = 0; i < westLeft.length; i++){
-    //           if(position == westLeft[i]){
-    //             y++;
-    //             facing="south";
-
-    //             en.newEncounter();
-    //           }
-    //         } break;
-    //     } break;
-    // }
-    draw();
   }
 
   public void draw(){

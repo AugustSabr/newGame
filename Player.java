@@ -5,13 +5,13 @@ public class Player{
     private int 
     maxHealth = 100,
     health = 100,
-    // basedamage = 25,
-    // critChance = 20 + 1,// 1/6
-    // potions = 3,
-    // baseDefence = 0,
+    strength = 25,
+    Speed = 15,
+    endurance = 20,
+    luck = 5,
     gold = 0;
-    // private double critMultiplier = 1.5;
-    // private Weapon weapon;
+    private Weapon weapon;
+    public int weaponIndex;
     // private Armor armor;
     // private Blessing blessing;
 
@@ -59,18 +59,30 @@ public class Player{
     public int getGold(){
       return this.gold;
     }
+    public int getEndurance() {
+      return endurance;
+    }
+    public int getLuck() {
+      return luck;
+    }
+    public int getSpeed() {
+      return Speed;
+    }
+    public int getStrength() {
+      return strength;
+    }
   
-    // public void setWeapon(Weapon weapon){
-    //   this.weapon = weapon;
-    // }
-    // public Weapon getWeapon(){
-    //   if (this.weapon != null){
-    //     return this.weapon;
-    //   }
-    //   else{
-    //     return null;
-    //   }
-    // }
+    public void setWeapon(Weapon weapon){
+      this.weapon = weapon;
+    }
+    public Weapon getWeapon(){
+      if (this.weapon != null){
+        return this.weapon;
+      }
+      else{
+        return null;
+      }
+    }
     
     // public int getBaseDamage(){
     //   return this.basedamage;

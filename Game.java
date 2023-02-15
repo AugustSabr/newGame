@@ -8,14 +8,14 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 public class Game {
   private Player player;
-  private UI ui = new UI(player);
+  private UI ui = new UI(this, player);
   private VisibilityManager vm = new VisibilityManager(ui);
   private ChoiceHandler cHandler = new ChoiceHandler();
   private Map map;
   private _KeyListener key;
   private GameInventory in;
   private Encounter e;
-  public String pIn;
+  public String c10, c11;
   public static void main(String[] args) {
     new Game();
   }
@@ -48,8 +48,8 @@ public class Game {
         case "c7": ui.selctbutton(7); break;
         case "c8": ui.selctbutton(8); break;
         case "c9": ui.selctbutton(9); break;
-        case "c10": e.selectPosition(pIn); break;
-        case "c11": e.selectPosition("leaveShop"); break;
+        case "c10": e.selectPosition(c10); break;
+        case "c11": e.selectPosition(c11); break;
       }
     }
   }
@@ -71,6 +71,7 @@ public class Game {
     ui.addGameInventory(in);
     vm.showGamescreen();
     e = new Encounter(ui, player, in, vm, this);
+    ui.addEncounter(e);
     map = new Map(ui, e, vm, 3, 0, "east");
     key = new _KeyListener(map, ui, e);
     vm.addKeyListener(key);

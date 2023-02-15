@@ -1,4 +1,10 @@
 stick
+placeholder
 1
 10
 15
+dagger
+placeholder
+1
+20
+30

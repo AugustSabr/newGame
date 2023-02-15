@@ -1,10 +1,11 @@
 import java.io.Serializable;
 public class Weapon implements Serializable {
-  private String weaponType;
+  private String weaponType, path;
   private int tier, weaponDamage, value, index;
 
-  public Weapon(String wt, int tr, int wd, int va, int index) {// tar inn tre verdier og lager et våpen
+  public Weapon(String wt, String ph, int tr, int wd, int va, int index) {// tar inn tre verdier og lager et våpen
     weaponType = wt;
+    path = ph;
     tier = tr;
     weaponDamage = wd;
     value = va;
@@ -22,6 +23,9 @@ public class Weapon implements Serializable {
 
   public String getType() {
     return this.weaponType;
+  }
+  public String getPath() {
+    return path;
   }
 
   public int getDamage() {

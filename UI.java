@@ -15,22 +15,30 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 public class UI {
+  Game game;
   Player player;
   GameInventory in;
+  Encounter en;
 
   JFrame window;
   private ImageIcon iconImg;
   private Container con;
   private Dimension roomImgSize, structureImgSize, encounterImgSize;
-  JPanel mainTextPanel, titleNamePanel, startButtonPanel, updateButtonPanel, inputTextPanel, choiceButtonPanel, sellCounterPanel;
-  JLabel roomImgLabel, structureImgLabel, encounterImgLabel, titleNameLabel, stringSellCounterLabel, intSellCounterLabel;
+  JPanel mainTextPanel, titleNamePanel, startButtonPanel, updateButtonPanel, inputTextPanel, choiceButtonPanel, itemInfoPanel, statPanel;
+  JLabel roomImgLabel, structureImgLabel, encounterImgLabel, titleNameLabel, stringShopCounterLabel, intShopCounterLabel;
   JTextField inputTextField;
   JTextArea mainTextArea;
   private Font titleFont = new Font("Times New Roman", Font.PLAIN, 128), normalFont = new Font("Times New Roman", Font.PLAIN, 25);
   JButton startButton, updateButton;
+
+  ArrayList<JLabel> statLabelList = new ArrayList<JLabel>();
   ArrayList<JButton> buttonList = new ArrayList<JButton>();
+  ArrayList<JLabel> itemInfoLabelList = new ArrayList<JLabel>();
+
   int[][] buttonListLayout = {
     { 0, 1},
     { 2, 3},
@@ -55,7 +63,61 @@ public class UI {
       y++;
     }
     pos = buttonListLayout[y][x];
+    drawButtons();
+  }
 
+  ArrayList<Integer> selectedButtons = new ArrayList<>();
+  public void selctbutton(int me){
+    if(en.buttonPanalUse == "shop"){
+      if(!buttonCheck(me)){
+        selectedButtons.add(me);
+      }
+      updateSellCounter();
+    }
+    if(en.buttonPanalUse == "inventory"){
+      int j = 0;
+      itemInfoLabelList.get(j).setText("");j++;
+      itemInfoLabelList.get(j).setText("");j++;
+      itemInfoLabelList.get(j).setText("");j++;
+      itemInfoLabelList.get(j).setText("");j++;
+      itemInfoLabelList.get(j).setText("");j++;
+      itemInfoLabelList.get(j).setText("");
+
+      if(!buttonCheck(me)){
+        selectedButtons.clear();
+        selectedButtons.add(me);
+      }
+      for(int i = 0; i < in.Weapons.size(); i++){
+        if(in.Weapons.get(i).getType() == buttonList.get(me).getText()){
+          buttonList.get(10).setText("Equip");
+          game.c10 = "equipWeapon";
+          int k = 0;
+          itemInfoLabelList.get(k).setText("Name:");k++;
+          itemInfoLabelList.get(k).setText(in.Weapons.get(i).getType());k++;
+          itemInfoLabelList.get(k).setText("Damage:");k++;
+          itemInfoLabelList.get(k).setText(in.Weapons.get(i).getDamage()+"");k++;
+          itemInfoLabelList.get(k).setText("Value");k++;
+          itemInfoLabelList.get(k).setText(in.Weapons.get(i).getValue()+"");
+          break;
+        } else {
+          buttonList.get(10).setText("");
+        }
+      }
+      for(int i = 0; i < in.Items.size(); i++){
+        if(in.Items.get(i).getName() == buttonList.get(me).getText()){
+          int k = 0;
+          itemInfoLabelList.get(k).setText("Name:");k++;
+          itemInfoLabelList.get(k).setText(in.Items.get(i).getName());k++;
+          itemInfoLabelList.get(k).setText("Value");k++;
+          itemInfoLabelList.get(k).setText(in.Items.get(i).getValue()+"");
+          break;
+        }
+      }
+    }
+    drawButtons();
+    // System.out.println(selectedButtons);
+  }
+  public void drawButtons(){
     for(int i = 0; i < buttonList.size(); i++){
       buttonList.get(i).setBorder(BorderFactory.createLineBorder(Color.white, 1));
     }
@@ -63,15 +125,6 @@ public class UI {
       buttonList.get(selectedButtons.get(i)).setBorder(BorderFactory.createLineBorder(Color.red, 4));
     }
     buttonList.get(pos).setBorder(BorderFactory.createLineBorder(Color.white, 4));
-  }
-
-  ArrayList<Integer> selectedButtons = new ArrayList<>();
-  public void selctbutton(int me){
-    if(!buttonCheck(me)){
-      selectedButtons.add(me);
-    }
-    updateSellCounter();
-    // System.out.println(selectedButtons);
   }
 
   public boolean buttonCheck(int check) {
@@ -84,28 +137,37 @@ public class UI {
     return false;
   }
 
-  int sellSum;
+  int sum;
   public void updateSellCounter() {
-    sellSum = 0;
+    sum = 0;
     for(int i = 0; i < selectedButtons.size(); i++){
       for(int j = 0; j < in.Weapons.size(); j++){
         if(in.Weapons.get(j).getType() == buttonList.get(selectedButtons.get(i)).getText()){
-          sellSum+= in.Weapons.get(j).getValue();
+          sum+= in.Weapons.get(j).getValue();
         }
       }
       for(int j = 0; j < in.Items.size(); j++){
         if(in.Items.get(j).getName() == buttonList.get(selectedButtons.get(i)).getText()){
-          sellSum+= in.Items.get(j).getValue();
+          sum+= in.Items.get(j).getValue();
         }
       }
     }
-    intSellCounterLabel.setText(""+sellSum);
+    if(stringShopCounterLabel.getText() == "Buy:"){
+      sum = sum*2;
+    }
+    intShopCounterLabel.setText(""+sum);
   }
-  public UI(Player p) {
+  public UI(Game g, Player p) {
+    game = g;
     player = p;
   }
   public void addGameInventory(GameInventory ga) {
     in = ga;
+  }
+
+
+  public void addEncounter(Encounter e) {
+    en = e;
   }
 
   public void createUI(Game.ChoiceHandler cHandler){
@@ -202,18 +264,56 @@ public class UI {
     mainTextArea.setEditable(false);
     mainTextPanel.add(mainTextArea);
 
+    //statPanel
+    statPanel = new JPanel();
+    statPanel.setBounds(560, 50, 280, 380);
+    statPanel.setBackground(Color.black);
+    statPanel.setLayout(new GridLayout(8, 2, 0, 0));
+    statPanel.setBorder(BorderFactory.createLineBorder(Color.white, 2));
+    con.add(statPanel);
+
+    for(int i = 0; i < 16; i++) {
+      JLabel label;
+      if(i % 2 == 0){
+        label = new JLabel("", SwingConstants.LEFT);
+        label.setBorder(new EmptyBorder(0,10,0,0));
+      } else{
+        label = new JLabel("", SwingConstants.RIGHT);
+        label.setBorder(new EmptyBorder(0,0,0,10));
+      }
+      label.setBackground(Color.black);
+      label.setForeground(Color.white);
+      label.setFont(normalFont);
+      statLabelList.add(label);
+      statPanel.add(label);
+    }
+
     //choice buttons
     choiceButtonPanel = new JPanel();
-    choiceButtonPanel.setBounds(550, 100, 300, 375);
+    choiceButtonPanel.setBounds(550, 50, 300, 375);
     choiceButtonPanel.setBackground(Color.black);
     choiceButtonPanel.setLayout(new GridLayout(6, 2, 10, 10));
     con.add(choiceButtonPanel);
 
     for(int i = 0; i < 12; i++) {
       JButton button = new JButton(null, null);
+      if(i==10){
+        button.setLayout(new GridLayout(1, 2));
+
+        stringShopCounterLabel = new JLabel("", SwingConstants.CENTER);
+        stringShopCounterLabel.setForeground(Color.white);
+        stringShopCounterLabel.setFont(normalFont);
+        button.add(stringShopCounterLabel);
+
+        intShopCounterLabel = new JLabel("", SwingConstants.CENTER);
+        intShopCounterLabel.setForeground(Color.white);
+        intShopCounterLabel.setFont(normalFont);
+        button.add(intShopCounterLabel);
+      }
       button.setBackground(Color.black);
       button.setForeground(Color.white);
       button.setFont(normalFont);
+      button.setBorder(BorderFactory.createLineBorder(Color.white, 1));
       button.setFocusPainted(false);
       button.addActionListener(cHandler);
       button.setActionCommand("c"+i);
@@ -221,57 +321,30 @@ public class UI {
       choiceButtonPanel.add(button);
     }
 
-    sellCounterPanel = new JPanel();
-    sellCounterPanel.setBounds(550, 425, 150, 30);
-    sellCounterPanel.setBackground(Color.black);
-    sellCounterPanel.setLayout(new GridLayout(1, 2));
-    con.add(sellCounterPanel);
+    //itemInfoPanel
+    itemInfoPanel = new JPanel();
+    itemInfoPanel.setBounds(550, 435, 300, 100);
+    itemInfoPanel.setBackground(Color.black);
+    itemInfoPanel.setLayout(new GridLayout(3, 2, 0, 0));
+    itemInfoPanel.setBorder(BorderFactory.createLineBorder(Color.red, 1));
+    con.add(itemInfoPanel);
 
-    stringSellCounterLabel = new JLabel("Sell:");
-    stringSellCounterLabel.setForeground(Color.white);
-    stringSellCounterLabel.setFont(normalFont);
-    sellCounterPanel.add(stringSellCounterLabel);
+    for(int i = 0; i < 6; i++) {
+      JLabel label;
+      if(i % 2 == 0){
+        label = new JLabel("", SwingConstants.LEFT);
+        label.setBorder(new EmptyBorder(0,10,0,0));
+      } else{
+        label = new JLabel("", SwingConstants.RIGHT);
+        label.setBorder(new EmptyBorder(0,0,0,10));
+      }
+      label.setBackground(Color.black);
+      label.setForeground(Color.white);
+      label.setFont(normalFont);
+      itemInfoLabelList.add(label);
+      itemInfoPanel.add(label);
+    }
 
-    intSellCounterLabel = new JLabel();
-    intSellCounterLabel.setForeground(Color.white);
-    intSellCounterLabel.setFont(normalFont);
-    sellCounterPanel.add(intSellCounterLabel);
-
-    // choice1 = new JButton("1");
-    // choice1.setBackground(Color.black);
-    // choice1.setForeground(Color.white);
-    // choice1.setFont(normalFont);
-    // // choice1.setFocusPainted(false);
-    // choice1.addActionListener(cHandler);
-    // choice1.setActionCommand("c1");
-    // choiceButtonPanel.add(choice1);
-
-    // choice2 = new JButton("2");
-    // choice2.setBackground(Color.black);
-    // choice2.setForeground(Color.white);
-    // choice2.setFont(normalFont);
-    // // choice2.setFocusPainted(false);
-    // choice2.addActionListener(cHandler);
-    // choice2.setActionCommand("c2");
-    // choiceButtonPanel.add(choice2);
-
-    // choice3 = new JButton("3");
-    // choice3.setBackground(Color.black);
-    // choice3.setForeground(Color.white);
-    // choice3.setFont(normalFont);
-    // // choice3.setFocusPainted(false);
-    // choice3.addActionListener(cHandler);
-    // choice3.setActionCommand("c3");
-    // choiceButtonPanel.add(choice3);
-
-    // choice4 = new JButton("4");
-    // choice4.setBackground(Color.black);
-    // choice4.setForeground(Color.white);
-    // choice4.setFont(normalFont);
-    // // choice4.setFocusPainted(false);
-    // choice4.addActionListener(cHandler);
-    // choice4.setActionCommand("c4");
-    // choiceButtonPanel.add(choice4);
 
     //setVisible
     con.setVisible(false);
