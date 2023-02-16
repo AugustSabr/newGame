@@ -235,7 +235,7 @@ public class Encounter {
 
   private void foundArmor(){
     newArmor = in.getArmor(-1);
-    ui.drawEncounter("Armors", newArmor.getPath());
+    ui.drawEncounter("armors", newArmor.getPath());
     ui.mainTextArea.setText("You see a "+ newArmor.getType());
     key.z = "getArmor";
   }

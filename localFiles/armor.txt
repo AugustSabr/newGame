@@ -1,10 +1,10 @@
 worn coths
-placeholder
+wornCoths
 1
 10
 10
-wooden armor
-placeholder
+wooden helmet
+woodenHelmet
 1
 15
 15
