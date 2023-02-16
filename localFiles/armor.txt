@@ -1,0 +1,50 @@
+worn coths
+placeholder
+1
+10
+10
+wooden armor
+placeholder
+1
+15
+15
+cactus armor
+placeholder
+1
+20
+20
+mage robe
+placeholder
+2
+35
+35
+assassin cloak
+placeholder
+2
+40
+40
+gladiator armor
+placeholder
+2
+55
+55
+iron armor
+placeholder
+2
+60
+60
+gold armor
+placeholder
+3
+70
+70
+viking armor
+placeholder
+3
+70
+70
+armor of achilles
+placeholder
+3
+85
+85

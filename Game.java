@@ -74,6 +74,8 @@ public class Game {
     e = new Encounter(ui, player, in, vm, this);
     ui.addEncounter(e);
     map = new Map(ui, e, vm, 3, 0, "east");
+    in.addMap(map);
+    e.addMap(map);
     key = new _KeyListener(map, ui, e);
     vm.addKeyListener(key);
   }

@@ -8,12 +8,10 @@ public class Player{
     strength = 25,
     Speed = 15,
     endurance = 20,
-    luck = 5,
-    gold = 1000;
+    luck = 1,
+    gold = 0;
     private Weapon myWeapon;
-    // public int weaponIndex;
-
-    // private Armor armor;
+    private Armor myArmor;
     // private Blessing blessing;
 
     ArrayList<Object> inventory = new ArrayList<Object>();
@@ -22,6 +20,10 @@ public class Player{
       if(inventory.get(i).getClass() == Weapon.class){
         Weapon weapon = (Weapon) inventory.get(i);
         return weapon.getType();
+      }
+      if(inventory.get(i).getClass() == Armor.class){
+        Armor armor = (Armor) inventory.get(i);
+        return armor.getType();
       }
       if(inventory.get(i).getClass() == Item.class){
         Item item = (Item) inventory.get(i);
@@ -107,17 +109,17 @@ public class Player{
     //   return this.basedamage;
     // }
   
-    // public void setArmor(Armor armor){
-    //   this.armor = armor;
-    // }
-    // public Armor getArmor(){
-    //   if (this.armor != null){
-    //     return this.armor;
-    //   }
-    //   else{
-    //     return null;
-    //   }
-    // }
+    public void setMyArmor(Armor armor){
+      this.myArmor = armor;
+    }
+    public Armor getMyArmor(){
+      if (this.myArmor != null){
+        return this.myArmor;
+      }
+      else{
+        return null;
+      }
+    }
 
     // public int getTotalDefence(){
     //   if (this.armor != null){

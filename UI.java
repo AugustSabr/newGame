@@ -88,6 +88,8 @@ public class UI {
         selectedButtons.clear();
         selectedButtons.add(me);
       }
+      buttonList.get(10).setText("");
+      game.c10 = "";
       for(int i = 0; i < in.Weapons.size(); i++){
         if(in.Weapons.get(i).getType() == buttonList.get(me).getText()){
           buttonList.get(10).setText("Equip");
@@ -101,8 +103,21 @@ public class UI {
           itemInfoLabelList.get(k).setText(in.Weapons.get(i).getValue()+" gold");
           itemInfoPanel.setVisible(true);
           break;
-        } else {
-          buttonList.get(10).setText("");
+        }
+      }
+      for(int i = 0; i < in.Armors.size(); i++){
+        if(in.Armors.get(i).getType() == buttonList.get(me).getText()){
+          buttonList.get(10).setText("Equip");
+          game.c10 = "equipArmor";
+          int k = 0;
+          itemInfoLabelList.get(k).setText("Name:");k++;
+          itemInfoLabelList.get(k).setText(in.Armors.get(i).getType());k++;
+          itemInfoLabelList.get(k).setText("Damage:");k++;
+          itemInfoLabelList.get(k).setText(in.Armors.get(i).getDefence()+"");k++;
+          itemInfoLabelList.get(k).setText("Value:");k++;
+          itemInfoLabelList.get(k).setText(in.Armors.get(i).getValue()+" gold");
+          itemInfoPanel.setVisible(true);
+          break;
         }
       }
       for(int i = 0; i < in.Items.size(); i++){
@@ -133,6 +148,9 @@ public class UI {
         if(player.inventory.get(i) == player.getMyWeapon()){
           buttonList.get(i).setBorder(BorderFactory.createLineBorder(Color.green, 4));
         }
+        if(player.inventory.get(i) == player.getMyArmor()){
+          buttonList.get(i).setBorder(BorderFactory.createLineBorder(Color.green, 4));
+        }
       }
     }
 
@@ -159,6 +177,11 @@ public class UI {
       for(int j = 0; j < in.Weapons.size(); j++){
         if(in.Weapons.get(j).getType() == buttonList.get(selectedButtons.get(i)).getText()){
           sum+= in.Weapons.get(j).getValue();
+        }
+      }
+      for(int j = 0; j < in.Armors.size(); j++){
+        if(in.Armors.get(j).getType() == buttonList.get(selectedButtons.get(i)).getText()){
+          sum+= in.Armors.get(j).getValue();
         }
       }
       for(int j = 0; j < in.Items.size(); j++){

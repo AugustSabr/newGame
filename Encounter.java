@@ -13,6 +13,7 @@ public class Encounter {
   private int randomEncounter;
   private Item newItem;
   private Weapon newWeapon;
+  private Armor newArmor;
 
   public String buttonPanalUse = "inventory";
 
@@ -23,6 +24,10 @@ public class Encounter {
       Weapon weapon = (Weapon) shopInventory.get(i);
       return weapon.getType();
     }
+    if(shopInventory.get(i).getClass() == Armor.class){
+      Armor armor = (Armor) shopInventory.get(i);
+      return armor.getType();
+    }
     if(shopInventory.get(i).getClass() == Item.class){
       Item item = (Item) shopInventory.get(i);
       return item.getName();
@@ -31,6 +36,7 @@ public class Encounter {
   }
 
   private int shopWeapons;
+  private int shopArmors;
   private int shopItems;
 
 
@@ -43,15 +49,16 @@ public class Encounter {
     vm = v;
 
     player = p;
-    updateShop();
     updateStats();
   }
+
   public void addKeyListener(_KeyListener k) {
     key = k;
     key.c = "openInventory";
   }
   public void addMap(Map m){
     map = m;
+    updateShop();
   }
 
   public void selectPosition(String nextPosition){
@@ -72,6 +79,8 @@ public class Encounter {
       case "getWeapon": getWeapon(); break;
       case "drop": drop(); break;
       case "equipWeapon": equipWeapon(); break;
+      case "getArmor": getArmor(); break;
+      case "equipArmor": equipArmor(); break;
       // case "attackRoll": attackRoll(); break;
       // case "attackPlayer": attackPlayer(); break;
       // case "attackEnemy": attackEnemy(); break;
@@ -87,16 +96,18 @@ public class Encounter {
   }
 
   public void newEncounter(){
-    this.randomEncounter = (int)Math.floor(Math.random()*2);
+    this.randomEncounter = (int)Math.floor(Math.random()*100);
 
     ui.drawEncounter("","");
-    if(randomEncounter == 0){
+    if(randomEncounter < 10*(1+((player.getLuck()-1)/10))){
       foundItem();
-    }
-    if(randomEncounter == 1){
+    }else if(randomEncounter < 20*(1+((player.getLuck()-1)/10))){
       foundWeapon();
-    }
-    if(randomEncounter == 2){
+    }else if(randomEncounter < 30*(1+((player.getLuck()-1)/10))){
+      foundArmor();
+    }else if(randomEncounter < 30*(1+((player.getLuck()-1)/10)) + 2.5*(1+((player.getLuck()-1)/10))){
+      //blessing
+    }else if(randomEncounter > 80){
       ui.drawEncounter("monsters", "me");
     }
   }
@@ -158,6 +169,9 @@ public class Encounter {
       if(player.inventory.get((int)ui.selectedButtons.get(0)) == player.getMyWeapon()){
       player.setMyWeapon(null);
       }
+      if(player.inventory.get((int)ui.selectedButtons.get(0)) == player.getMyArmor()){
+        player.setMyArmor(null);
+        }
       player.inventory.remove((int)ui.selectedButtons.get(0));
     }
     openInventory();
@@ -167,6 +181,16 @@ public class Encounter {
     for(int i = 0; i < player.inventory.size(); i++){
       if(player.getInventoryString(i) == ui.buttonList.get((int)ui.selectedButtons.get(0)).getText()){
         player.setMyWeapon((Weapon)player.inventory.get(ui.selectedButtons.get(0)));
+        break;
+      }
+    }
+    openInventory();
+  }
+
+  private void equipArmor(){
+    for(int i = 0; i < player.inventory.size(); i++){
+      if(player.getInventoryString(i) == ui.buttonList.get((int)ui.selectedButtons.get(0)).getText()){
+        player.setMyArmor((Armor)player.inventory.get(ui.selectedButtons.get(0)));
         break;
       }
     }
@@ -209,6 +233,24 @@ public class Encounter {
     }
   }
 
+  private void foundArmor(){
+    newArmor = in.getArmor(-1);
+    ui.drawEncounter("Armors", newArmor.getPath());
+    ui.mainTextArea.setText("You see a "+ newArmor.getType());
+    key.z = "getArmor";
+  }
+
+  private void getArmor(){
+    if(player.inventory.size() >= 10){
+      ui.mainTextArea.setText("you carry to many items");
+    } else {
+      player.inventory.add(newArmor);
+      ui.mainTextArea.setText(newArmor.getType()+" is now in youre inventory");
+      ui.drawEncounter("","");
+      key.z = "";
+    }
+  }
+
   private void checkDoor(){
     ui.mainTextArea.setText("You try to open the door\nIt is locked. Maybe you can open it using a key?");
     for (int i = 0; i < player.inventory.size(); i++) {
@@ -244,11 +286,15 @@ public class Encounter {
 
   private void updateShop(){
     shopWeapons = (int)Math.floor(Math.random()*3) + 1;
+    shopArmors = (int)Math.floor(Math.random()*3) + 1;
     shopItems = (int)Math.floor(Math.random()*3) + 1;
 
   
     for(int i = 0; i < shopWeapons; i++){
       shopInventory.add(in.getWeapon(-1));
+    }
+    for(int i = 0; i < shopArmors; i++){
+      shopInventory.add(in.getArmor(-1));
     }
     for(int i = 0; i < shopItems; i++){
       shopInventory.add(in.getItem(-1));
@@ -341,6 +387,9 @@ public class Encounter {
           if(player.inventory.get(i) == player.getMyWeapon()){
             player.setMyWeapon(null);
           }
+          if(player.inventory.get(i) == player.getMyArmor()){
+            player.setMyArmor(null);
+          }
           ui.selectedButtons.remove(j);
           player.inventory.remove(i);
           break;
@@ -356,6 +405,7 @@ public class Encounter {
     vm.dontShowchoiceButtons();
     key.z = "talkToShopkeeper";
     key.x = "";
+    key.c = "openInventory";
     game.c10 = "";
     game.c11 = "";
     buttonPanalUse = "inventory";

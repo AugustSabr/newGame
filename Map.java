@@ -30,9 +30,8 @@ public class Map {
     {" ", " ", " ", " ", " ", " ", " ", " "}
   };
 
-  public int x, y;
+  public int x, y, floor;
   private String facing, position, structure;
-  private int floor = 1;
 
   private UI ui;
   private Encounter en;
@@ -47,7 +46,7 @@ public class Map {
     x = _x;
     y = _y;
     facing = f;
-    en.addMap(this);
+    floor = 1;
     draw();
   }
   public void addKeyListener(_KeyListener k){
