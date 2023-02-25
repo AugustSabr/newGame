@@ -1,50 +1,50 @@
-worn coths
-wornCoths
+worn cloths
+wornCloths.png
+10
+10
 1
-10
-10
 wooden helmet
-woodenHelmet
+woodenHelmet.png
+15
+15
 1
-15
-15
 cactus armor
-placeholder
+placeholder.png
+20
+20
 1
-20
-20
 mage robe
-placeholder
+placeholder.png
+35
+35
 2
-35
-35
 assassin cloak
-placeholder
+placeholder.png
+40
+40
 2
-40
-40
 gladiator armor
-placeholder
+placeholder.png
+55
+55
 2
-55
-55
 iron armor
-placeholder
+placeholder.png
+60
+60
 2
-60
-60
 gold armor
-placeholder
+placeholder.png
+70
+70
 3
-70
-70
 viking armor
-placeholder
+placeholder.png
+70
+70
 3
-70
-70
 armor of achilles
-placeholder
+placeholder.png
+85
+85
 3
-85
-85

@@ -3,16 +3,17 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.List;
 
+import javax.swing.Timer;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -27,9 +28,9 @@ public class UI {
   JFrame window;
   private ImageIcon iconImg;
   private Container con;
-  private Dimension roomImgSize, structureImgSize, encounterImgSize;
+  private Dimension roomImgSize, structureImgSize, encounterImgSize, attackImgSize;
   JPanel mainTextPanel, titleNamePanel, startButtonPanel, updateButtonPanel, inputTextPanel, choiceButtonPanel, itemInfoPanel, statPanel;
-  JLabel roomImgLabel, structureImgLabel, encounterImgLabel, titleNameLabel, stringShopCounterLabel, intShopCounterLabel;
+  JLabel roomImgLabel, structureImgLabel, encounterImgLabel, titleNameLabel, stringShopCounterLabel, intShopCounterLabel, attackLabel;
   JTextField inputTextField;
   JTextArea mainTextArea;
   private Font titleFont = new Font("Times New Roman", Font.PLAIN, 128), normalFont = new Font("Times New Roman", Font.PLAIN, 25);
@@ -49,20 +50,76 @@ public class UI {
   };
 
   int y=5, x=1, pos = buttonListLayout[y][x];
-  public void chageButton(String s){
-    if(pos % 2 == 0 && s == "right"){
+  public void chageButton(String d){
+    if(pos % 2 == 0 && d == "right"){
       x++;
     }
-    if(pos % 2 != 0 && s == "left"){
+    if(pos % 2 != 0 && d == "left"){
       x=x-1;
     }
-    if(pos > 1 && s == "up"){
+    if(pos > 1 && d == "up"){
       y=y-1;
     }
-    if(pos < 10 && s == "down"){
+    if(pos < 10 && d == "down"){
       y++;
     }
     pos = buttonListLayout[y][x];
+
+    if(en.buttonPanalUse == "shopBuy" || en.buttonPanalUse == "shopSell"){
+      int j = 0;
+      itemInfoLabelList.get(j).setText("");j++;
+      itemInfoLabelList.get(j).setText("");j++;
+      itemInfoLabelList.get(j).setText("");j++;
+      itemInfoLabelList.get(j).setText("");j++;
+      itemInfoLabelList.get(j).setText("");j++;
+      itemInfoLabelList.get(j).setText("");
+      if(player.inventory.size() > pos){
+        if(player.inventory.get(pos).getClass() == Weapon.class){
+          int k = 0;
+          Weapon w;
+          if(en.buttonPanalUse == "shopBuy"){
+            w = (Weapon)en.shopInventory.get(pos);
+          } else {
+            w = (Weapon)player.inventory.get(pos);
+          }
+          itemInfoLabelList.get(k).setText("Name:");k++;
+          itemInfoLabelList.get(k).setText(w.getType());k++;
+          itemInfoLabelList.get(k).setText("Damage:");k++;
+          itemInfoLabelList.get(k).setText(w.getDamage()+"");k++;
+          itemInfoLabelList.get(k).setText("Value:");k++;
+          itemInfoLabelList.get(k).setText(w.getValue()+" gold");
+          itemInfoPanel.setVisible(true);
+        }else if(player.inventory.get(pos).getClass() == Armor.class){
+          int k = 0;
+          Armor a;
+          if(en.buttonPanalUse == "shopBuy"){
+            a = (Armor)en.shopInventory.get(pos);
+          } else {
+            a = (Armor)player.inventory.get(pos);
+          }
+          itemInfoLabelList.get(k).setText("Name:");k++;
+          itemInfoLabelList.get(k).setText(a.getType());k++;
+          itemInfoLabelList.get(k).setText("Defence:");k++;
+          itemInfoLabelList.get(k).setText(a.getDefence()+"");k++;
+          itemInfoLabelList.get(k).setText("Value:");k++;
+          itemInfoLabelList.get(k).setText(a.getValue()+" gold");
+          itemInfoPanel.setVisible(true);
+        }else if(player.inventory.get(pos).getClass() == Item.class){
+          int k = 0;
+          Item i;
+          if(en.buttonPanalUse == "shopBuy"){
+            i = (Item)en.shopInventory.get(pos);
+          } else {
+            i = (Item)player.inventory.get(pos);
+          }
+          itemInfoLabelList.get(k).setText("Name:");k++;
+          itemInfoLabelList.get(k).setText(i.getType());k++;
+          itemInfoLabelList.get(k).setText("Value:");k++;
+          itemInfoLabelList.get(k).setText(i.getValue()+" gold");
+          itemInfoPanel.setVisible(true);
+        }
+      }
+    }
     drawButtons();
   }
 
@@ -90,46 +147,44 @@ public class UI {
       }
       buttonList.get(10).setText("");
       game.c10 = "";
-      for(int i = 0; i < in.Weapons.size(); i++){
-        if(in.Weapons.get(i).getType() == buttonList.get(me).getText()){
-          buttonList.get(10).setText("Equip");
-          game.c10 = "equipWeapon";
-          int k = 0;
-          itemInfoLabelList.get(k).setText("Name:");k++;
-          itemInfoLabelList.get(k).setText(in.Weapons.get(i).getType());k++;
-          itemInfoLabelList.get(k).setText("Damage:");k++;
-          itemInfoLabelList.get(k).setText(in.Weapons.get(i).getDamage()+"");k++;
-          itemInfoLabelList.get(k).setText("Value:");k++;
-          itemInfoLabelList.get(k).setText(in.Weapons.get(i).getValue()+" gold");
-          itemInfoPanel.setVisible(true);
-          break;
-        }
+      if(player.inventory.get(me).getClass() == Weapon.class){
+        buttonList.get(10).setText("Equip");
+        game.c10 = "equipWeapon";
+        int k = 0;
+        Weapon w = (Weapon)player.inventory.get(me);
+        itemInfoLabelList.get(k).setText("Name:");k++;
+        itemInfoLabelList.get(k).setText(w.getType());k++;
+        itemInfoLabelList.get(k).setText("Damage:");k++;
+        itemInfoLabelList.get(k).setText(w.getDamage()+"");k++;
+        itemInfoLabelList.get(k).setText("Value:");k++;
+        itemInfoLabelList.get(k).setText(w.getValue()+" gold");
+        itemInfoPanel.setVisible(true);
       }
-      for(int i = 0; i < in.Armors.size(); i++){
-        if(in.Armors.get(i).getType() == buttonList.get(me).getText()){
-          buttonList.get(10).setText("Equip");
-          game.c10 = "equipArmor";
-          int k = 0;
-          itemInfoLabelList.get(k).setText("Name:");k++;
-          itemInfoLabelList.get(k).setText(in.Armors.get(i).getType());k++;
-          itemInfoLabelList.get(k).setText("Damage:");k++;
-          itemInfoLabelList.get(k).setText(in.Armors.get(i).getDefence()+"");k++;
-          itemInfoLabelList.get(k).setText("Value:");k++;
-          itemInfoLabelList.get(k).setText(in.Armors.get(i).getValue()+" gold");
-          itemInfoPanel.setVisible(true);
-          break;
-        }
+      if(player.inventory.get(me).getClass() == Armor.class){
+        buttonList.get(10).setText("Equip");
+        game.c10 = "equipArmor";
+        int k = 0;
+        Armor a = (Armor)player.inventory.get(me);
+        itemInfoLabelList.get(k).setText("Name:");k++;
+        itemInfoLabelList.get(k).setText(a.getType());k++;
+        itemInfoLabelList.get(k).setText("Defence:");k++;
+        itemInfoLabelList.get(k).setText(a.getDefence()+"");k++;
+        itemInfoLabelList.get(k).setText("Value:");k++;
+        itemInfoLabelList.get(k).setText(a.getValue()+" gold");
+        itemInfoPanel.setVisible(true);
       }
-      for(int i = 0; i < in.Items.size(); i++){
-        if(in.Items.get(i).getName() == buttonList.get(me).getText()){
-          int k = 0;
-          itemInfoLabelList.get(k).setText("Name:");k++;
-          itemInfoLabelList.get(k).setText(in.Items.get(i).getName());k++;
-          itemInfoLabelList.get(k).setText("Value:");k++;
-          itemInfoLabelList.get(k).setText(in.Items.get(i).getValue()+" gold");
-          itemInfoPanel.setVisible(true);
-          break;
-        }
+      if(player.inventory.get(me).getClass() == Item.class){
+        int k = 0;
+        Item i = (Item)player.inventory.get(me);
+        itemInfoLabelList.get(k).setText("Name:");k++;
+        itemInfoLabelList.get(k).setText(i.getType());k++;
+        itemInfoLabelList.get(k).setText("Value:");k++;
+        itemInfoLabelList.get(k).setText(i.getValue()+" gold");
+        itemInfoPanel.setVisible(true);
+      }
+      if(player.getInventoryString(me).equals("healing potion")){
+        buttonList.get(10).setText("Use potion");
+        game.c10 = "heal";
       }
     }
     drawButtons();
@@ -185,7 +240,7 @@ public class UI {
         }
       }
       for(int j = 0; j < in.Items.size(); j++){
-        if(in.Items.get(j).getName() == buttonList.get(selectedButtons.get(i)).getText()){
+        if(in.Items.get(j).getType() == buttonList.get(selectedButtons.get(i)).getText()){
           sum+= in.Items.get(j).getValue();
         }
       }
@@ -277,6 +332,9 @@ public class UI {
     inputTextField.setActionCommand("makePlayer");
     inputTextPanel.add(inputTextField);
 
+
+    attackLabel = new JLabel();
+    con.add(attackLabel);
 
     encounterImgLabel = new JLabel();
     con.add(encounterImgLabel);
@@ -383,6 +441,9 @@ public class UI {
       itemInfoPanel.add(label);
     }
 
+    
+
+
 
     //setVisible
     con.setVisible(false);
@@ -403,8 +464,23 @@ public class UI {
   }
 
   public void drawEncounter(String category, String file){
-    encounterImgLabel.setIcon(new ImageIcon("img/"+category+"/"+file+".png"));
+    encounterImgLabel.setIcon(new ImageIcon("img/"+category+"/"+file));
     encounterImgSize = encounterImgLabel.getPreferredSize(); 
     encounterImgLabel.setBounds(10, 10, encounterImgSize.width, encounterImgSize.height);
+  }
+
+  public void drawAttack(){
+    attackLabel.setIcon(new ImageIcon("img/attack.gif"));
+    attackImgSize = attackLabel.getPreferredSize(); 
+    attackLabel.setBounds(10, 10, attackImgSize.width, attackImgSize.height);
+    Timer timer = new Timer(533, (ActionListener) new ActionListener() {
+      public void actionPerformed(ActionEvent e){
+        attackLabel.setIcon(new ImageIcon(""));
+        if(en.newMonsterHealth <= 0){
+          drawEncounter("", "");
+        }
+      }
+    }); timer.setRepeats(false);
+    timer.start();  
   }
 }

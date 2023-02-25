@@ -1,5 +1,7 @@
 import java.util.ArrayList;
-
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 public class Encounter {
   private Game game;
   private UI ui;
@@ -10,10 +12,12 @@ public class Encounter {
   private VisibilityManager vm;
 
   private Player player;
-  private int randomEncounter;
+  private int randomEncounter, shopWeapons, shopArmors, shopItems;
+  public int newMonsterHealth;
   private Item newItem;
   private Weapon newWeapon;
   private Armor newArmor;
+  public Monster newMonster;
 
   public String buttonPanalUse = "inventory";
 
@@ -30,14 +34,10 @@ public class Encounter {
     }
     if(shopInventory.get(i).getClass() == Item.class){
       Item item = (Item) shopInventory.get(i);
-      return item.getName();
+      return item.getType();
     }
     return null;
   }
-
-  private int shopWeapons;
-  private int shopArmors;
-  private int shopItems;
 
 
   private String[] shopSmalltalk = {"<shopkeeper>\nCan I help you with something specific, or are you just here to waste my time?", "<shopkeeper>\nIf you're not going to buy anything, please don't touch the merchandise.", "<shopkeeper>\nI don't have all day to stand here and chat. If you're not going to make a purchase, I suggest you leave.", "<shopkeeper>\nIf you don't know what you want, maybe you should come back when you do.", "<shopkeeper>\nI'm sorry, but I'm not in the mood for small talk right now. Is there something specific you're looking for?"};
@@ -81,10 +81,10 @@ public class Encounter {
       case "equipWeapon": equipWeapon(); break;
       case "getArmor": getArmor(); break;
       case "equipArmor": equipArmor(); break;
-      // case "attackRoll": attackRoll(); break;
-      // case "attackPlayer": attackPlayer(); break;
-      // case "attackEnemy": attackEnemy(); break;
-      // case "lootEnemy": lootEnemy(); break;
+      case "attackPlayer": attackPlayer(); break;
+      case "attackMonster": attackMonster(); break;
+      case "heal": heal(); break;
+      case "escape": escape(); break;
       // case "lootWeapon": lootWeapon(); break;
       // case "lootArmor": lootArmor(); break;
       // case "escapeRoll": escapeRoll(); break;
@@ -108,7 +108,7 @@ public class Encounter {
     }else if(randomEncounter < 30*(1+((player.getLuck()-1)/10)) + 2.5*(1+((player.getLuck()-1)/10))){
       //blessing
     }else if(randomEncounter > 80){
-      ui.drawEncounter("monsters", "me");
+      encounterMonster();
     }
   }
 
@@ -127,11 +127,11 @@ public class Encounter {
     ui.statLabelList.get(i).setText("Inventory:");i++;
     ui.statLabelList.get(i).setText(player.inventory.size()+"/10");i++;
     ui.statLabelList.get(i).setText("Strength:");i++;
-    ui.statLabelList.get(i).setText(player.getStrength()+"");i++;
+    ui.statLabelList.get(i).setText(player.getTotalDamage()+"");i++;
     ui.statLabelList.get(i).setText("Speed:");i++;
     ui.statLabelList.get(i).setText(player.getSpeed()+"");i++;
     ui.statLabelList.get(i).setText("Endurance:");i++;
-    ui.statLabelList.get(i).setText(player.getEndurance()+"");i++;
+    ui.statLabelList.get(i).setText(player.getTotalDefence()+"");i++;
     ui.statLabelList.get(i).setText("Luck:");i++;
     ui.statLabelList.get(i).setText(player.getLuck()+"");
   }
@@ -197,10 +197,17 @@ public class Encounter {
     openInventory();
   }
 
+  private void heal(){
+    player.heal();
+    ui.mainTextArea.setText("You drank the potion, and are now at full health ");
+    player.inventory.remove((int)ui.selectedButtons.get(0));
+    openInventory();
+  }
+
   private void foundItem(){
     newItem = in.getItem(-1);
     ui.drawEncounter("items", newItem.getPath());
-    ui.mainTextArea.setText("You see a "+newItem.getName());
+    ui.mainTextArea.setText("You see a "+newItem.getType());
     key.z = "getItem";
   }
 
@@ -209,7 +216,7 @@ public class Encounter {
       ui.mainTextArea.setText("you carry to many items");
     } else {
       player.inventory.add(newItem);
-      ui.mainTextArea.setText(newItem.getName()+" is now in youre inventory");
+      ui.mainTextArea.setText(newItem.getType()+" is now in youre inventory");
       ui.drawEncounter("","");
       key.z = "";
     }
@@ -248,6 +255,97 @@ public class Encounter {
       ui.mainTextArea.setText(newArmor.getType()+" is now in youre inventory");
       ui.drawEncounter("","");
       key.z = "";
+    }
+  }
+
+  private void encounterMonster(){
+    newMonster = in.getMonster(-1);
+    newMonsterHealth = newMonster.getHealth();
+    ui.mainTextArea.setText(player.getName() + " encountered a " + newMonster.getName());
+    ui.drawEncounter("monsters", newMonster.getPath());
+    key.inCombat = true;
+    if(player.getSpeed() >= newMonster.getSpeed()){
+      turnPlayer();
+    } else {
+      key.z = "attackMonster";
+    }
+    
+  }
+
+  private void turnPlayer(){
+    key.z = "attackPlayer";
+    key.x = "escape";
+  }
+
+  private void attackPlayer(){
+    key.x = "";
+    int damage = player.getTotalDamage();
+
+    damage = Math.max(0, damage - newMonster.getEndurance());
+    newMonsterHealth -= damage;
+    ui.drawAttack();
+    if(newMonsterHealth > 0){
+      ui.mainTextArea.setText(player.getName() + " attacks the " + newMonster.getName() + " and deals " + damage + " damage");
+
+      key.z = "attackMonster";
+
+    }else{
+      // player.addGold(enemy.getBaseDamage());
+      // ui.goldIntLabel.setText("" + player.getGold());
+      ui.mainTextArea.setText(player.getName() + " attacks the " + newMonster.getName() + " and deals " + damage + " damage\nThe " + newMonster.getName() + " was slayed");
+      key.inCombat = false;
+      key.z = "";
+    }
+  }
+
+  private void attackMonster(){
+    int playerHealth = player.getHealth();
+    int damage = (int)Math.max(0, newMonster.getTotalDamage()* 1-(player.getTotalDefence()/100.0));
+    playerHealth -=  damage;
+    player.changeHealth(playerHealth);
+    if(playerHealth > 0){
+      ui.mainTextArea.setText("The " + newMonster.getName() + " attacks the " + player.getName() + " and deals " + damage + " damage.");
+      turnPlayer();
+    }else{// death screen
+      ui.mainTextArea.setText("The " + newMonster.getName() + " attacks the " + player.getName() + " and deals " + damage + " damage.\n" + player.getName() + " was slayed.\nGame over\n\n\n\n\n:(");
+      key.z = "";
+      key.x = "";
+      key.c = "";
+    }
+  }
+
+  private void escape(){
+    key.x = "";
+    if(player.inventory.size() == 0 && (int)Math.floor(Math.random()*2) == 0){
+      ui.mainTextArea.setText("The " + newMonster.getName() + " has its guard down, run quickly");
+      key.inCombat = false;
+      Timer timer = new Timer(3000, (ActionListener) new ActionListener() {
+        public void actionPerformed(ActionEvent e){
+          if(newMonster != null){
+            ui.mainTextArea.setText("You took to long");
+            key.inCombat = true;
+            key.z = "attackPlayer";
+          }
+        }
+      }); timer.setRepeats(false);
+      timer.start(); 
+    }
+    if(player.getSpeed() * (1+Math.floor(Math.random()*10)) > newMonster.getSpeed() * (1+Math.floor(Math.random()*10))){
+      ui.mainTextArea.setText("The " + newMonster.getName() + " has its guard down, run quickly");
+      key.inCombat = false;
+      Timer timer = new Timer(500, (ActionListener) new ActionListener() {
+        public void actionPerformed(ActionEvent e){
+          if(newMonster != null){
+            ui.mainTextArea.setText("You took to long");
+            key.inCombat = true;
+            key.z = "attackPlayer";
+          }
+        }
+      }); timer.setRepeats(false);
+      timer.start(); 
+    } else {
+      ui.mainTextArea.setText("You looked for an opening to escape, but the " + newMonster.getName() + " was ready for your attempt");
+      key.z = "attackPlayer";
     }
   }
 
@@ -396,7 +494,8 @@ public class Encounter {
         }
       }
     }
-    player.addGold(Integer.parseInt(ui.intShopCounterLabel.getText()));
+    player.addGold((int)Integer.parseInt(ui.intShopCounterLabel.getText()));
+    System.out.println(Integer.parseInt(ui.intShopCounterLabel.getText()));
     selectItemsToSell();
   }
 

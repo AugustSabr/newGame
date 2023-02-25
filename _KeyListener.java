@@ -6,6 +6,7 @@ public class _KeyListener implements KeyListener {
   private UI ui;
   private Encounter en;
   public String z = "", x = "", c = "", keyEffect = "walking";
+  public Boolean inCombat = false;
 
   public _KeyListener(Map m, UI u, Encounter e) {
     map = m;
@@ -26,7 +27,7 @@ public class _KeyListener implements KeyListener {
   @Override
   public void keyReleased(KeyEvent e) {
     if (e.getKeyCode() == KeyEvent.VK_UP) {
-      if(keyEffect == "walking"){
+      if(keyEffect == "walking" && inCombat == false){
         map.move("up");
       }
       if(keyEffect == "inventory"){
@@ -34,7 +35,7 @@ public class _KeyListener implements KeyListener {
       }
     }
     if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-      if(keyEffect == "walking"){
+      if(keyEffect == "walking" && inCombat == false){
         map.move("down");
       }
       if(keyEffect == "inventory"){
@@ -42,14 +43,14 @@ public class _KeyListener implements KeyListener {
       }
     }
     if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-      if(keyEffect == "walking"){
+      if(keyEffect == "walking" && inCombat == false){
         map.move("right");
       }
       if(keyEffect == "inventory"){
         ui.chageButton("right");
       }    }
     if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-      if(keyEffect == "walking"){
+      if(keyEffect == "walking" && inCombat == false){
         map.move("left");
       }
       if(keyEffect == "inventory"){

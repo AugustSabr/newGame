@@ -54,6 +54,7 @@ public class Map {
   }
 
   public void move(String s){
+    en.newMonster = null;
     key.z = "";
     key.x = "";
     key.c = "openInventory";

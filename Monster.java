@@ -1,18 +1,17 @@
-public class Monster {
-  private String enemyType;
-
-  private int tier, enemyHealth, enemyDamage;
-
-  // private Weapon weapon;
-  // private Armor armor;
+public class Monster extends creaturesSuperClass{
+  private String path;
+  private int tier;
   private GameInventory in;
 
-  public Monster (GameInventory gi, String et, int tr, int ed, int eh) {
-    in = gi;
-    enemyType = et;
-    tier = tr;
-    enemyDamage = ed;
-    enemyHealth = eh;
+  public Monster (String n, String p, int st, int h, int e, int sp, int t, GameInventory i) {
+    name = n;
+    path = p;
+    strength = st;
+    health = h;
+    endurance = e;
+    speed = sp;
+    tier = t;
+    in = i;
   }
 
   // public Enemy giveGear() {
@@ -29,33 +28,7 @@ public class Monster {
     return tier;
   }
 
-  public String getType(){
-    return this.enemyType;
+  public String getPath() {
+    return path;
   }
-
-  public int getHealth(){
-    return this.enemyHealth;
-  }
-
-  // public Weapon getWeapon(){
-  //   if (this.weapon != null){
-  //     return this.weapon;
-  //   }
-  //   else{
-  //     return null;
-  //   }
-  // }
-
-  public int getBaseDamage(){
-    return this.enemyDamage;
-  }
-
-  // public Armor getArmor(){
-  //   if (this.armor != null){
-  //     return this.armor;
-  //   }
-  //   else{
-  //     return null;
-  //   }
-  // }
 }

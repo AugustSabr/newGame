@@ -11,7 +11,7 @@ public class GameInventory {
   // ArrayList<Blessing> Blessings = new ArrayList<Blessing>();
   ArrayList<Monster> Monsters = new ArrayList<Monster>();
 
-  private String[] categories = {"weapon", "item","armor", "blessing", "enemy"};
+  private String[] categories = {"weapon", "item","armor", "blessing", "monster"};
 
   public GameInventory(){
     for (int i = 0; i < categories.length; i++){
@@ -24,7 +24,7 @@ public class GameInventory {
             case "item": Items.add(new Item(myReader.nextLine(), myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()))); break;
             case "armor": Armors.add(new Armor(myReader.nextLine(), myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()))); break;
             // case "blessing": Blessings.add(new Blessing(myReader.nextLine(), Integer.parseInt(myReader.nextLine()))); break;
-            case "enemy": Monsters.add(new Monster(this, myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()))); break;
+            case "monster": Monsters.add(new Monster(myReader.nextLine(), myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), this)); break;
           }
         }
         myReader.close();
@@ -47,11 +47,11 @@ public class GameInventory {
       while(w1.getTier() > map.floor){//passer på at funkjsonen ikke returnerer et våpen men forhøy tier
         w1 = Weapons.get((int)(Math.floor(Math.random() * Weapons.size())));
       }
-      w2 = new Weapon(w1.getType(), w1.getPath(), w1.getTier(), w1.getDamage(), w1.getValue());
+      w2 = new Weapon(w1.getType(), w1.getPath(), w1.getDamage(), w1.getValue(), w1.getTier());
       return w2;
     } else {
       w1 = Weapons.get(i);
-      w2 = new Weapon(w1.getType(), w1.getPath(), w1.getTier(), w1.getDamage(), w1.getValue());
+      w2 = new Weapon(w1.getType(), w1.getPath(), w1.getDamage(), w1.getValue(), w1.getTier());
       return w2;
     }
   }
@@ -61,11 +61,11 @@ public class GameInventory {
     Item i2;
     if (i == -1){//hvis du kaller med en annen verdi får du våpenet med den indexen
       i1 = Items.get((int)(Math.floor(Math.random() * Items.size())));
-      i2 = new Item(i1.getName(), i1.getPath(), i1.getTier(), i1.getValue());
+      i2 = new Item(i1.getType(), i1.getPath(), i1.getTier(), i1.getValue());
       return i2;
     } else {
       i1 = Items.get(i);
-      i2 = new Item(i1.getName(), i1.getPath(), i1.getTier(), i1.getValue());
+      i2 = new Item(i1.getType(), i1.getPath(), i1.getTier(), i1.getValue());
       return i2;
     }
   }
@@ -78,11 +78,11 @@ public class GameInventory {
       while(a1.getTier() > map.floor){//passer på at funkjsonen ikke returnerer et våpen men forhøy tier
         a1 = Armors.get((int)(Math.floor(Math.random() * Armors.size())));
       }
-      a2 = new Armor(a1.getType(), a1.getPath(), a1.getTier(), a1.getDefence(), a1.getValue());
+      a2 = new Armor(a1.getType(), a1.getPath(), a1.getDefence(), a1.getValue(), a1.getTier());
       return a2;
     } else {
       a1 = Armors.get(i);
-      a2 = new Armor(a1.getType(), a1.getPath(), a1.getTier(), a1.getDefence(), a1.getValue());
+      a2 = new Armor(a1.getType(), a1.getPath(), a1.getDefence(), a1.getValue(), a1.getTier());
       return a2;
     }
   }
