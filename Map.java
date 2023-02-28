@@ -1,21 +1,34 @@
 import javax.swing.Timer;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 
 
 public class Map {
-  private String[][] mapLayout = {
-    {" ", " ", " ", "d", "i", " ", " ", " "},
-    {" ", " ", " ", " ", "e", " ", " ", " "},
-    {" ", " ", " ", " ", "e", " ", " ", " "},
-    {" ", "a", "h", "i", "k", "b", "a", " "},
-    {" ", "g", "n", "o", "n", "f", "o", "b"},
-    {"d", "f", "f", "o", "f", "f", "j", " "},
-    {"d", "f", "l", "o", "l", "i", " ", " "},
-    {" ", " ", "c", "c", "e", "k", "b", " "},
-    {" ", " ", "c", " ", "k", "m", " ", " "},
-    {" ", " ", " ", " ", "c", "c", " ", " "}
-  };
+  // private String[][] mapLayout = {
+  //   {" ", " ", " ", "d", "i", " ", " ", " "},
+  //   {" ", " ", " ", " ", "e", " ", " ", " "},
+  //   {" ", " ", " ", " ", "e", " ", " ", " "},
+  //   {" ", "a", "h", "i", "k", "b", "a", " "},
+  //   {" ", "g", "n", "o", "n", "f", "o", "b"},
+  //   {"d", "f", "f", "o", "f", "f", "j", " "},
+  //   {"d", "f", "l", "o", "l", "i", " ", " "},
+  //   {" ", " ", "c", "c", "e", "k", "b", " "},
+  //   {" ", " ", "c", " ", "k", "m", " ", " "},
+  //   {" ", " ", " ", " ", "c", "c", " ", " "}
+  // };
+  // [d, f, b, d, f, i, h, f, l, b], 
+  // [d, f, b, d, l, o, n, f, j, a], 
+  // [d, b, h, f, o, n, i, d, f, m], 
+  // [h, i, e, h, j,  , e, d, b, c], 
+  // [c, c, g, o, l, i, c, a, d, i], 
+  // [d, b, h, m, k, m, d, j, a, c], 
+  // [a, a, c, k, m, e, a,  , e, a], 
+  // [g, n, b, e, c, e, g, l, m, c], 
+  // [d, b, d, j,  , k, b, c, k, i], 
+  // [ ,  , d, f, f, n, b,  , c, c]]
 
   public String[][] structureLayout = {
     {" ", " ", " ", " ", " ", " ", " ", " "},
@@ -29,6 +42,7 @@ public class Map {
     {" ", " ", "r", " ", " ", " ", " ", " "},
     {" ", " ", " ", " ", " ", " ", " ", " "}
   };
+
 
   public int x, y, floor;
   private String facing, position, structure;
@@ -47,10 +61,108 @@ public class Map {
     y = _y;
     facing = f;
     floor = 1;
+
+    createFloor();
     draw();
   }
   public void addKeyListener(_KeyListener k){
     key = k;
+  }
+
+  ArrayList<ArrayList<ArrayList<String>>> maps = new ArrayList<ArrayList<ArrayList<String>>>();
+
+  public void createFloor(){
+    ArrayList<ArrayList<String>> mapLayout = new ArrayList<ArrayList<String>>();
+    for (int i = 0; i < 10; i++) {
+      ArrayList<String> x = new ArrayList<String>();
+      for (int j = 0; j < 10; j++) {
+        ArrayList<String> roomPossibilities = new ArrayList<String>(Arrays.asList(" ", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o"));
+        String[] upCheck = {"a", "e", "h", "i", "k", "l", "m", "o"};
+        boolean up=false;
+        for (int k = 0; k < upCheck.length; k++) {
+          try {
+            if(mapLayout.get(i-1).get(j) == upCheck[k]){
+              up=true;
+              break;
+            }
+          } catch (Exception e) {}
+        }
+        if(up){
+          roomPossibilities.remove(" ");
+          roomPossibilities.remove("a");
+          roomPossibilities.remove("b");
+          roomPossibilities.remove("d");
+          roomPossibilities.remove("f");
+          roomPossibilities.remove("h");
+          roomPossibilities.remove("i");
+          roomPossibilities.remove("l");
+        } else {
+          roomPossibilities.remove("c");
+          roomPossibilities.remove("e");
+          roomPossibilities.remove("g");
+          roomPossibilities.remove("j");
+          roomPossibilities.remove("k");
+          roomPossibilities.remove("m");
+          roomPossibilities.remove("n");
+          roomPossibilities.remove("o");
+        }
+        String[] leftCheck = {"d", "f", "g", "h", "k", "l", "n", "o"};
+        boolean left=false;
+        for (int k = 0; k < leftCheck.length; k++) {
+          try {
+            if(x.get(j-1) == leftCheck[k]){
+              left=true;
+              break;
+            }
+          } catch (Exception e) {}
+        }
+        if(left){
+          roomPossibilities.remove(" ");
+          roomPossibilities.remove("a");
+          roomPossibilities.remove("c");
+          roomPossibilities.remove("d");
+          roomPossibilities.remove("e");
+          roomPossibilities.remove("g");
+          roomPossibilities.remove("h");
+          roomPossibilities.remove("k");
+        } else {
+          roomPossibilities.remove("b");
+          roomPossibilities.remove("f");
+          roomPossibilities.remove("i");
+          roomPossibilities.remove("j");
+          roomPossibilities.remove("l");
+          roomPossibilities.remove("m");
+          roomPossibilities.remove("n");
+          roomPossibilities.remove("o");
+        }
+        if(i==9){
+          roomPossibilities.remove("a");
+          roomPossibilities.remove("e");
+          roomPossibilities.remove("h");
+          roomPossibilities.remove("i");
+          roomPossibilities.remove("k");
+          roomPossibilities.remove("l");
+          roomPossibilities.remove("m");
+          roomPossibilities.remove("o");
+        }
+        if(j==9){
+          roomPossibilities.remove("d");
+          roomPossibilities.remove("f");
+          roomPossibilities.remove("g");
+          roomPossibilities.remove("h");
+          roomPossibilities.remove("k");
+          roomPossibilities.remove("l");
+          roomPossibilities.remove("n");
+          roomPossibilities.remove("o");
+        }
+        
+        x.add(roomPossibilities.get(new Random().nextInt(roomPossibilities.size())));
+        System.out.println(x);
+      }
+      mapLayout.add(x);
+    }
+    System.out.println(mapLayout);
+    maps.add(mapLayout);
   }
 
   public void move(String s){
@@ -101,7 +213,8 @@ public class Map {
   public void draw(){
     ui.mainTextArea.setText("");
     structure = structureLayout[y][x];
-    position = mapLayout[y][x];
+    // position = mapLayout[y][x];
+    position = "e";
     ui.drawRoom("blackScreen");
     ui.drawStructure("");
     ui.drawEncounter("","");
