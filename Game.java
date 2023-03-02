@@ -68,14 +68,16 @@ public class Game {
       System.err.println("Error message: " + e + "\n");
       // e.printStackTrace();
     }
+    // for (int i = 0; i < 100; i++) {
+    //   System.out.println((int)Math.floor(i/10));
+    // }
     ui.addGameInventory(in);
     ui.addPlayer(player);
     vm.showGamescreen();
     e = new Encounter(ui, player, in, vm, this);
     ui.addEncounter(e);
-    map = new Map(ui, e, vm, 3, 0, "east");
-    in.addMap(map);
-    e.addMap(map);
+    map = new Map(ui, e, vm, in, 3, 0, "east");
+    ui.drawMap();
     key = new _KeyListener(map, ui, e);
     vm.addKeyListener(key);
   }

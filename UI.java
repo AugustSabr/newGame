@@ -24,13 +24,14 @@ public class UI {
   Player player;
   GameInventory in;
   Encounter en;
+  Map map;
 
   JFrame window;
   private ImageIcon iconImg;
   private Container con;
-  private Dimension roomImgSize, structureImgSize, encounterImgSize, attackImgSize;
-  JPanel mainTextPanel, titleNamePanel, startButtonPanel, updateButtonPanel, inputTextPanel, choiceButtonPanel, itemInfoPanel, statPanel;
-  JLabel roomImgLabel, structureImgLabel, encounterImgLabel, titleNameLabel, stringShopCounterLabel, intShopCounterLabel, attackLabel;
+  private Dimension roomImgSize, structureImgSize, encounterImgSize, attackImgSize, playerPosImgSize;
+  JPanel mainTextPanel, titleNamePanel, startButtonPanel, updateButtonPanel, inputTextPanel, choiceButtonPanel, itemInfoPanel, statPanel, mapPanel;
+  JLabel roomImgLabel, structureImgLabel, encounterImgLabel, titleNameLabel, stringShopCounterLabel, intShopCounterLabel, attackLabel, playerPosLabel;
   JTextField inputTextField;
   JTextArea mainTextArea;
   private Font titleFont = new Font("Times New Roman", Font.PLAIN, 128), normalFont = new Font("Times New Roman", Font.PLAIN, 25);
@@ -39,6 +40,7 @@ public class UI {
   ArrayList<JLabel> statLabelList = new ArrayList<JLabel>();
   ArrayList<JButton> buttonList = new ArrayList<JButton>();
   ArrayList<JLabel> itemInfoLabelList = new ArrayList<JLabel>();
+  ArrayList<JLabel> mapLabelList = new ArrayList<JLabel>();
 
   int[][] buttonListLayout = {
     { 0, 1},
@@ -263,6 +265,10 @@ public class UI {
     en = e;
   }
 
+  public void addMap(Map m) {
+    map = m;
+  }
+
   public void createUI(Game.ChoiceHandler cHandler){
     //window
     window = new JFrame();
@@ -441,14 +447,38 @@ public class UI {
       itemInfoPanel.add(label);
     }
 
-    
+    playerPosLabel = new JLabel();
+    con.add(playerPosLabel);
+
+    mapPanel = new JPanel();
+    mapPanel.setBounds(625, 440, 200, 200);
+    mapPanel.setBackground(Color.black);
+    mapPanel.setLayout(new GridLayout(10, 10, 0, 0));
+    // mapPanel.setBorder(BorderFactory.createLineBorder(Color.white, 1));
+    con.add(mapPanel);
 
 
-
+    for(int i = 0; i < 100; i++) {
+      JLabel label = new JLabel();
+      mapLabelList.add(label);
+      mapPanel.add(label);
+    }
     //setVisible
     con.setVisible(false);
     con.setVisible(true);
     
+  }
+
+  public void drawMap(){
+    for (int i = 0; i < mapLabelList.size(); i++) {
+      mapLabelList.get(i).setIcon(new ImageIcon("img/miniMap/"+map.maps.get(map.floor-1).get((int)Math.floor(i/10)).get(i % 10)+".png"));
+    }
+  }
+
+  public void drawplayer(){
+    playerPosLabel.setIcon(new ImageIcon("img/miniMap/"+ map.getFacing() + "Player.png"));
+    playerPosImgSize = playerPosLabel.getPreferredSize(); 
+    playerPosLabel.setBounds(625 + (map.x * 20), 440 + (map.y * 20), playerPosImgSize.width, playerPosImgSize.height);
   }
 
     public void drawRoom(String file){

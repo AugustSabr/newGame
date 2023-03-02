@@ -1,3 +1,4 @@
+import javax.sound.sampled.SourceDataLine;
 import javax.swing.Timer;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -7,34 +8,14 @@ import java.awt.event.ActionEvent;
 
 
 public class Map {
-  // private String[][] mapLayout = {
-  //   {" ", " ", " ", "d", "i", " ", " ", " "},
-  //   {" ", " ", " ", " ", "e", " ", " ", " "},
-  //   {" ", " ", " ", " ", "e", " ", " ", " "},
-  //   {" ", "a", "h", "i", "k", "b", "a", " "},
-  //   {" ", "g", "n", "o", "n", "f", "o", "b"},
-  //   {"d", "f", "f", "o", "f", "f", "j", " "},
-  //   {"d", "f", "l", "o", "l", "i", " ", " "},
-  //   {" ", " ", "c", "c", "e", "k", "b", " "},
-  //   {" ", " ", "c", " ", "k", "m", " ", " "},
-  //   {" ", " ", " ", " ", "c", "c", " ", " "}
-  // };
-  // [d, f, b, d, f, i, h, f, l, b], 
-  // [d, f, b, d, l, o, n, f, j, a], 
-  // [d, b, h, f, o, n, i, d, f, m], 
-  // [h, i, e, h, j,  , e, d, b, c], 
-  // [c, c, g, o, l, i, c, a, d, i], 
-  // [d, b, h, m, k, m, d, j, a, c], 
-  // [a, a, c, k, m, e, a,  , e, a], 
-  // [g, n, b, e, c, e, g, l, m, c], 
-  // [d, b, d, j,  , k, b, c, k, i], 
-  // [ ,  , d, f, f, n, b,  , c, c]]
+
+  ArrayList<ArrayList<String>> mapLayout1 = new ArrayList<ArrayList<String>>();
 
   public String[][] structureLayout = {
     {" ", " ", " ", " ", " ", " ", " ", " "},
     {" ", " ", " ", " ", " ", " ", " ", " "},
     {" ", " ", " ", " ", " ", " ", " ", " "},
-    {" ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", "s", " ", " ", " ", " ", " ", " "},
     {" ", " ", " ", " ", " ", " ", " ", " "},
     {" ", " ", " ", " ", " ", " ", " ", " "},
     {" ", " ", " ", " ", " ", " ", " ", " "},
@@ -52,7 +33,8 @@ public class Map {
   private _KeyListener key;
   private VisibilityManager vm;
 
-  public Map(UI u, Encounter e, VisibilityManager v,int _x, int _y, String f) {
+  public Map(UI u, Encounter e, VisibilityManager v, GameInventory in, int _x, int _y, String f) {
+
     ui = u;
     en = e;
     vm = v;
@@ -61,15 +43,29 @@ public class Map {
     y = _y;
     facing = f;
     floor = 1;
+    in.addMap(this);
+    e.addMap(this);
+    ui.addMap(this);
 
-    createFloor();
+    mapLayout1.add(new ArrayList<String>(Arrays.asList(" ", " ", " ", "d", "i", " ", " ", " ", " ", " ")));
+    mapLayout1.add(new ArrayList<String>(Arrays.asList(" ", " ", " ", " ", "e", " ", " ", " ", " ", " ")));
+    mapLayout1.add(new ArrayList<String>(Arrays.asList(" ", " ", " ", " ", "e", " ", " ", " ", " ", " ")));
+    mapLayout1.add(new ArrayList<String>(Arrays.asList(" ", "a", "h", "i", "k", "b", "a", " ", " ", " ")));
+    mapLayout1.add(new ArrayList<String>(Arrays.asList(" ", "g", "n", "o", "n", "f", "o", "b", " ", " ")));
+    mapLayout1.add(new ArrayList<String>(Arrays.asList("d", "f", "f", "o", "f", "f", "j", " ", " ", " ")));
+    mapLayout1.add(new ArrayList<String>(Arrays.asList("d", "f", "l", "o", "l", "i", " ", " ", " ", " ")));
+    mapLayout1.add(new ArrayList<String>(Arrays.asList(" ", " ", "c", "c", "e", "k", "b", " ", " ", " ")));
+    mapLayout1.add(new ArrayList<String>(Arrays.asList(" ", " ", "c", " ", "k", "m", " ", " ", " ", " ")));
+    mapLayout1.add(new ArrayList<String>(Arrays.asList(" ", " ", " ", " ", "c", "c", " ", " ", " ", " ")));
+    maps.add(mapLayout1);
     draw();
   }
   public void addKeyListener(_KeyListener k){
     key = k;
   }
 
-  ArrayList<ArrayList<ArrayList<String>>> maps = new ArrayList<ArrayList<ArrayList<String>>>();
+  public ArrayList<ArrayList<ArrayList<String>>> maps = new ArrayList<ArrayList<ArrayList<String>>>();
+  
 
   public void createFloor(){
     ArrayList<ArrayList<String>> mapLayout = new ArrayList<ArrayList<String>>();
@@ -155,13 +151,10 @@ public class Map {
           roomPossibilities.remove("n");
           roomPossibilities.remove("o");
         }
-        
         x.add(roomPossibilities.get(new Random().nextInt(roomPossibilities.size())));
-        System.out.println(x);
       }
       mapLayout.add(x);
     }
-    System.out.println(mapLayout);
     maps.add(mapLayout);
   }
 
@@ -213,8 +206,9 @@ public class Map {
   public void draw(){
     ui.mainTextArea.setText("");
     structure = structureLayout[y][x];
-    // position = mapLayout[y][x];
-    position = "e";
+    position = maps.get(floor-1).get(y).get(x);
+    // System.out.println("position: "+position);
+    ui.drawplayer();
     ui.drawRoom("blackScreen");
     ui.drawStructure("");
     ui.drawEncounter("","");
@@ -296,7 +290,8 @@ public class Map {
         switch(structure){
           case "p": ui.drawStructure("door"); key.z = "checkDoor"; break;
           case "q": if(position == "a" && facing == "south" || position == "b" && facing == "west" || position == "c" && facing == "north" || position == "d" && facing == "east"){}else{ui.drawStructure("openDoor"); key.z = "goThruDoor";} break;
-          case "r": ui.drawStructure("shop"); key.z = "talkToShopkeeper";break;
+          case "r": ui.drawStructure("shop"); key.z = "talkToShopkeeper"; break;
+          case "s": ui.drawStructure("hole"); en.hole(); break;
         }
       }
     }); timer.setRepeats(false);

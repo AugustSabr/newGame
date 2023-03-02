@@ -25,6 +25,8 @@ public class VisibilityManager {
     ui.statPanel.setVisible(false);
     ui.choiceButtonPanel.setVisible(false);
     ui.itemInfoPanel.setVisible(false);
+    ui.playerPosLabel.setVisible(false);
+    ui.mapPanel.setVisible(false);
 
   }
   public void enterName(){
@@ -37,21 +39,11 @@ public class VisibilityManager {
     ui.inputTextPanel.setVisible(true);
     ui.inputTextField.requestFocus();
 
-    ui.encounterImgLabel.setVisible(false);
-    ui.roomImgLabel.setVisible(false);
     ui.mainTextPanel.setVisible(true);
-    ui.statPanel.setVisible(false);
-    ui.choiceButtonPanel.setVisible(false);
-    ui.itemInfoPanel.setVisible(false);
-
   }
   public void showGamescreen(){
     //titlescreen
     ui.window.requestFocus();
-    ui.titleNamePanel.setVisible(false);
-    ui.startButtonPanel.setVisible(false);
-    ui.updateButtonPanel.setVisible(false);
-
 
     //inputname
     ui.inputTextPanel.setVisible(false);
@@ -59,21 +51,23 @@ public class VisibilityManager {
     //gamescreen
     ui.encounterImgLabel.setVisible(true);
     ui.roomImgLabel.setVisible(true);
-    ui.mainTextPanel.setVisible(true);
     ui.statPanel.setVisible(true);
-    ui.choiceButtonPanel.setVisible(false);
-    ui.itemInfoPanel.setVisible(false);
+    ui.playerPosLabel.setVisible(true);
+    ui.mapPanel.setVisible(true);
   }
   public void showchoiceButtons(){
     ui.statPanel.setVisible(false);
     ui.choiceButtonPanel.setVisible(true);
-    ui.itemInfoPanel.setVisible(false);
+    ui.playerPosLabel.setVisible(false);
+    ui.mapPanel.setVisible(false);
     key.keyEffect = "inventory";
   }
   public void dontShowchoiceButtons(){
     ui.statPanel.setVisible(true);
     ui.choiceButtonPanel.setVisible(false);
     ui.itemInfoPanel.setVisible(false);
+    ui.playerPosLabel.setVisible(true);
+    ui.mapPanel.setVisible(true);
     key.keyEffect = "walking";
   }
 }

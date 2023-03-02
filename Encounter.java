@@ -85,7 +85,8 @@ public class Encounter {
       case "attackMonster": attackMonster(); break;
       case "heal": heal(); break;
       case "escape": escape(); break;
-      // case "lootWeapon": lootWeapon(); break;
+      case "hole": hole(); break;
+      case "jumpIntoHole": jumpIntoHole(); break;
       // case "lootArmor": lootArmor(); break;
       // case "escapeRoll": escapeRoll(); break;
       // case "run": run(); break;
@@ -108,7 +109,7 @@ public class Encounter {
     }else if(randomEncounter < 30*(1+((player.getLuck()-1)/10)) + 2.5*(1+((player.getLuck()-1)/10))){
       //blessing
     }else if(randomEncounter > 80){
-      encounterMonster();
+      // encounterMonster();
     }
   }
 
@@ -202,6 +203,19 @@ public class Encounter {
     ui.mainTextArea.setText("You drank the potion, and are now at full health ");
     player.inventory.remove((int)ui.selectedButtons.get(0));
     openInventory();
+  }
+
+  
+  public void hole(){
+    ui.mainTextArea.setText("You see a hole to a lower floor");
+    key.z = "jumpIntoHole";
+  }
+
+  private void jumpIntoHole(){
+    map.createFloor();
+    map.floor++;
+    map.draw();
+    ui.drawMap();
   }
 
   private void foundItem(){
