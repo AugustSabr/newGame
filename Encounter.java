@@ -123,6 +123,8 @@ public class Encounter {
     ui.statLabelList.get(i).setText(player.getName());i++;
     ui.statLabelList.get(i).setText("HP:");i++;
     ui.statLabelList.get(i).setText(player.getHealth()+"/"+player.getMaxHealth());i++;
+    ui.statLabelList.get(i).setText("EXP:");i++;
+    ui.statLabelList.get(i).setText(player.getExp()+"");i++;
     ui.statLabelList.get(i).setText("Gold:");i++;
     ui.statLabelList.get(i).setText(player.getGold()+"");i++;
     ui.statLabelList.get(i).setText("Inventory:");i++;
@@ -422,6 +424,9 @@ public class Encounter {
   }
   private void shopSmalltalk(){
     ui.mainTextArea.setText(shopSmalltalk[(int)Math.floor(Math.random()*shopSmalltalk.length)]);
+    key.z = "selectItemsToBuy";
+    key.x = "selectItemsToSell";
+    key.c = "shopSmalltalk";
   }
 
   private void selectItemsToBuy(){

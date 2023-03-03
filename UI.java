@@ -370,11 +370,11 @@ public class UI {
     statPanel = new JPanel();
     statPanel.setBounds(560, 50, 280, 380);
     statPanel.setBackground(Color.black);
-    statPanel.setLayout(new GridLayout(8, 2, 0, 0));
+    statPanel.setLayout(new GridLayout(9, 2, 0, 0));
     statPanel.setBorder(BorderFactory.createLineBorder(Color.white, 2));
     con.add(statPanel);
 
-    for(int i = 0; i < 16; i++) {
+    for(int i = 0; i < 18; i++) {
       JLabel label;
       if(i % 2 == 0){
         label = new JLabel("", SwingConstants.LEFT);

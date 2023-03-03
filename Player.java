@@ -4,6 +4,7 @@ public class Player extends creaturesSuperClass{
     private int 
     maxHealth = 100,
     luck = 1,
+    exp = 0,
     gold = 0;
     // private Blessing blessing;
 
@@ -42,6 +43,10 @@ public class Player extends creaturesSuperClass{
     }
     public void changeHealth(int h){
       health = h;
+    }
+
+    public int getExp() {
+      return exp;
     }
   
 

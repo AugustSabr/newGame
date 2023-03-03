@@ -12,16 +12,16 @@ public class Map {
   ArrayList<ArrayList<String>> mapLayout1 = new ArrayList<ArrayList<String>>();
 
   public String[][] structureLayout = {
-    {" ", " ", " ", " ", " ", " ", " ", " "},
-    {" ", " ", " ", " ", " ", " ", " ", " "},
-    {" ", " ", " ", " ", " ", " ", " ", " "},
-    {" ", "s", " ", " ", " ", " ", " ", " "},
-    {" ", " ", " ", " ", " ", " ", " ", " "},
-    {" ", " ", " ", " ", " ", " ", " ", " "},
-    {" ", " ", " ", " ", " ", " ", " ", " "},
-    {" ", " ", "p", " ", " ", " ", " ", " "},
-    {" ", " ", "r", " ", " ", " ", " ", " "},
-    {" ", " ", " ", " ", " ", " ", " ", " "}
+    {" ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", "s", " ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", "p", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", "r", " ", " ", " ", " ", " ", " ", " "},
+    {" ", " ", " ", " ", " ", " ", " ", " ", " ", " "}
   };
 
 
@@ -70,7 +70,7 @@ public class Map {
   public void createFloor(){
     ArrayList<ArrayList<String>> mapLayout = new ArrayList<ArrayList<String>>();
     for (int i = 0; i < 10; i++) {
-      ArrayList<String> x = new ArrayList<String>();
+      ArrayList<String> ylevel = new ArrayList<String>();
       for (int j = 0; j < 10; j++) {
         ArrayList<String> roomPossibilities = new ArrayList<String>(Arrays.asList(" ", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o"));
         String[] upCheck = {"a", "e", "h", "i", "k", "l", "m", "o"};
@@ -106,7 +106,7 @@ public class Map {
         boolean left=false;
         for (int k = 0; k < leftCheck.length; k++) {
           try {
-            if(x.get(j-1) == leftCheck[k]){
+            if(ylevel.get(j-1) == leftCheck[k]){
               left=true;
               break;
             }
@@ -151,9 +151,45 @@ public class Map {
           roomPossibilities.remove("n");
           roomPossibilities.remove("o");
         }
-        x.add(roomPossibilities.get(new Random().nextInt(roomPossibilities.size())));
+        if(i == y && j == x){
+          roomPossibilities.remove(" ");
+          if(facing == "north"){
+            roomPossibilities.remove("b");
+            roomPossibilities.remove("d");
+            roomPossibilities.remove("f");
+            roomPossibilities.remove("g");
+            roomPossibilities.remove("j");
+            roomPossibilities.remove("n");
+          }
+          if(facing == "south"){
+            roomPossibilities.remove("b");
+            roomPossibilities.remove("d");
+            roomPossibilities.remove("f");
+            roomPossibilities.remove("h");
+            roomPossibilities.remove("i");
+            roomPossibilities.remove("l");
+          }
+          if(facing == "east"){
+            roomPossibilities.remove("a");
+            roomPossibilities.remove("c");
+            roomPossibilities.remove("e");
+            roomPossibilities.remove("g");
+            roomPossibilities.remove("h");
+            roomPossibilities.remove("k");
+          }
+          if(facing == "west"){
+            roomPossibilities.remove("a");
+            roomPossibilities.remove("c");
+            roomPossibilities.remove("e");
+            roomPossibilities.remove("i");
+            roomPossibilities.remove("j");
+            roomPossibilities.remove("m");
+          }
+        }
+        // lav sjangse for at funksjonen fjernes f. eks hvis du ser sør og det er gang mot venstre men ikke opp fjernes alle muligheter
+        ylevel.add(roomPossibilities.get(new Random().nextInt(roomPossibilities.size())));
       }
-      mapLayout.add(x);
+      mapLayout.add(ylevel);
     }
     maps.add(mapLayout);
   }
@@ -207,7 +243,6 @@ public class Map {
     ui.mainTextArea.setText("");
     structure = structureLayout[y][x];
     position = maps.get(floor-1).get(y).get(x);
-    // System.out.println("position: "+position);
     ui.drawplayer();
     ui.drawRoom("blackScreen");
     ui.drawStructure("");
