@@ -41,6 +41,7 @@ public class UI {
   ArrayList<JButton> buttonList = new ArrayList<JButton>();
   ArrayList<JLabel> itemInfoLabelList = new ArrayList<JLabel>();
   ArrayList<JLabel> mapLabelList = new ArrayList<JLabel>();
+  public ArrayList<ArrayList<String>> mapString = new ArrayList<ArrayList<String>>();
 
   int[][] buttonListLayout = {
     { 0, 1},
@@ -471,7 +472,8 @@ public class UI {
 
   public void drawMap(){
     for (int i = 0; i < mapLabelList.size(); i++) {
-      mapLabelList.get(i).setIcon(new ImageIcon("img/miniMap/"+map.maps.get(map.floor-1).get((int)Math.floor(i/10)).get(i % 10)+".png"));
+      mapLabelList.get(i).setIcon(new ImageIcon("img/miniMap/"+mapString.get((int)Math.floor(i/10)).get(i % 10)+".png"));
+      // mapLabelList.get(i).setIcon(new ImageIcon("img/miniMap/"+map.maps.get(map.floor-1).get((int)Math.floor(i/10)).get(i % 10)+".png"));
     }
   }
 

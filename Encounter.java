@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+
 import javax.swing.Timer;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -97,7 +98,7 @@ public class Encounter {
   }
 
   public void newEncounter(){
-    this.randomEncounter = (int)Math.floor(Math.random()*100);
+    // this.randomEncounter = (int)Math.floor(Math.random()*100);
 
     ui.drawEncounter("","");
     if(randomEncounter < 10*(1+((player.getLuck()-1)/10))){
@@ -109,7 +110,7 @@ public class Encounter {
     }else if(randomEncounter < 30*(1+((player.getLuck()-1)/10)) + 2.5*(1+((player.getLuck()-1)/10))){
       //blessing
     }else if(randomEncounter > 80){
-      // encounterMonster();
+      encounterMonster();
     }
   }
 
@@ -218,6 +219,16 @@ public class Encounter {
     map.floor++;
     map.draw();
     ui.drawMap();
+
+    // Timer timer = new Timer(20, (ActionListener) new ActionListener() {
+      // public void actionPerformed(ActionEvent e){
+        // map.createFloor();
+        // map.floor++;
+        // map.draw();
+        // ui.drawMap();
+      // }
+    // }); timer.setRepeats(true);
+    // timer.start();
   }
 
   private void foundItem(){
@@ -377,7 +388,7 @@ public class Encounter {
 
   private void openDoor(){
     ui.drawStructure("openDoor");
-    map.structureLayout[map.y][map.x] = "q";
+    map.structureLayouts.get(map.floor-1).get(map.y).set(map.x, "q");
     ui.mainTextArea.setText("You open door using a key");
     for (int i = 0; i < player.inventory.size(); i++) {
       if(player.getInventoryString(i).equals("key")){
@@ -497,7 +508,6 @@ public class Encounter {
 
   private void sellToShop(){
     // ui.mainTextArea.setText("<shopkeeper>\nWhat a steal.");
-    System.out.println("wawa");
     for (int i = player.inventory.size()-1; i >= 0; i--) {
       for(int j = 0; j < ui.selectedButtons.size(); j++){
         if(player.getInventoryString(i).equals(ui.buttonList.get(ui.selectedButtons.get(j)).getText())){
@@ -514,7 +524,6 @@ public class Encounter {
       }
     }
     player.addGold((int)Integer.parseInt(ui.intShopCounterLabel.getText()));
-    System.out.println(Integer.parseInt(ui.intShopCounterLabel.getText()));
     selectItemsToSell();
   }
 
