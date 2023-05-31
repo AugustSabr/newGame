@@ -69,6 +69,12 @@ public class UI {
     pos = buttonListLayout[y][x];
 
     if(en.buttonPanalUse == "shopBuy" || en.buttonPanalUse == "shopSell"){
+      ArrayList<Object> in;
+      if (en.buttonPanalUse == "shopBuy") {
+        in = en.shopInventory;
+      } else{
+        in = player.inventory;
+      }
       int j = 0;
       itemInfoLabelList.get(j).setText("");j++;
       itemInfoLabelList.get(j).setText("");j++;
@@ -76,15 +82,10 @@ public class UI {
       itemInfoLabelList.get(j).setText("");j++;
       itemInfoLabelList.get(j).setText("");j++;
       itemInfoLabelList.get(j).setText("");
-      if(player.inventory.size() > pos){
-        if(player.inventory.get(pos).getClass() == Weapon.class){
+      if(in.size() > pos){
+        if(in.get(pos).getClass() == Weapon.class){
           int k = 0;
-          Weapon w;
-          if(en.buttonPanalUse == "shopBuy"){
-            w = (Weapon)en.shopInventory.get(pos);
-          } else {
-            w = (Weapon)player.inventory.get(pos);
-          }
+          Weapon w = (Weapon)in.get(pos);
           itemInfoLabelList.get(k).setText("Name:");k++;
           itemInfoLabelList.get(k).setText(w.getType());k++;
           itemInfoLabelList.get(k).setText("Damage:");k++;
@@ -92,14 +93,9 @@ public class UI {
           itemInfoLabelList.get(k).setText("Value:");k++;
           itemInfoLabelList.get(k).setText(w.getValue()+" gold");
           itemInfoPanel.setVisible(true);
-        }else if(player.inventory.get(pos).getClass() == Armor.class){
+        }else if(in.get(pos).getClass() == Armor.class){
           int k = 0;
-          Armor a;
-          if(en.buttonPanalUse == "shopBuy"){
-            a = (Armor)en.shopInventory.get(pos);
-          } else {
-            a = (Armor)player.inventory.get(pos);
-          }
+          Armor a = (Armor)in.get(pos);
           itemInfoLabelList.get(k).setText("Name:");k++;
           itemInfoLabelList.get(k).setText(a.getType());k++;
           itemInfoLabelList.get(k).setText("Defence:");k++;
@@ -107,14 +103,9 @@ public class UI {
           itemInfoLabelList.get(k).setText("Value:");k++;
           itemInfoLabelList.get(k).setText(a.getValue()+" gold");
           itemInfoPanel.setVisible(true);
-        }else if(player.inventory.get(pos).getClass() == Item.class){
+        }else if(in.get(pos).getClass() == Item.class){
           int k = 0;
-          Item i;
-          if(en.buttonPanalUse == "shopBuy"){
-            i = (Item)en.shopInventory.get(pos);
-          } else {
-            i = (Item)player.inventory.get(pos);
-          }
+          Item i = (Item)in.get(pos);
           itemInfoLabelList.get(k).setText("Name:");k++;
           itemInfoLabelList.get(k).setText(i.getType());k++;
           itemInfoLabelList.get(k).setText("Value:");k++;

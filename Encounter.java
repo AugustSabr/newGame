@@ -98,7 +98,7 @@ public class Encounter {
   }
 
   public void newEncounter(){
-    // this.randomEncounter = (int)Math.floor(Math.random()*100);
+    this.randomEncounter = (int)Math.floor(Math.random()*100);
 
     ui.drawEncounter("","");
     if(randomEncounter < 10*(1+((player.getLuck()-1)/10))){
@@ -109,7 +109,7 @@ public class Encounter {
       foundArmor();
     }else if(randomEncounter < 30*(1+((player.getLuck()-1)/10)) + 2.5*(1+((player.getLuck()-1)/10))){
       //blessing
-    }else if(randomEncounter > 80){
+    }else if(randomEncounter > 90){
       encounterMonster();
     }
   }

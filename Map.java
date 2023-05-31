@@ -143,45 +143,6 @@ public class Map {
             }
           } catch (Exception e) {}
         }
-        if(i == y && j == x){
-          roomPossibilities.remove(" ");
-          if(facing == "north"){
-            roomPossibilities.remove("b");
-            roomPossibilities.remove("d");
-            roomPossibilities.remove("f");
-            roomPossibilities.remove("g");
-            roomPossibilities.remove("j");
-            roomPossibilities.remove("n");
-          }
-          if(facing == "south"){
-            roomPossibilities.remove("b");
-            roomPossibilities.remove("d");
-            roomPossibilities.remove("f");
-            roomPossibilities.remove("h");
-            roomPossibilities.remove("i");
-            roomPossibilities.remove("l");
-          }
-          if(facing == "east"){
-            roomPossibilities.remove("a");
-            roomPossibilities.remove("c");
-            roomPossibilities.remove("e");
-            roomPossibilities.remove("g");
-            roomPossibilities.remove("h");
-            roomPossibilities.remove("k");
-          }
-          if(facing == "west"){
-            roomPossibilities.remove("a");
-            roomPossibilities.remove("c");
-            roomPossibilities.remove("e");
-            roomPossibilities.remove("i");
-            roomPossibilities.remove("j");
-            roomPossibilities.remove("m");
-          }
-          ylevelMap.add(roomPossibilities.get(new Random().nextInt(roomPossibilities.size())));
-          ylevelStructure.add("s");
-          continue;
-        }
-
         if(up){
           roomPossibilities.remove(" ");
           roomPossibilities.remove("b");
@@ -284,6 +245,44 @@ public class Map {
           roomPossibilities.remove("n");
           roomPossibilities.remove("o");
         }
+        if(i == y && j == x){
+          roomPossibilities.remove(" ");
+          if(facing == "north"){
+            roomPossibilities.remove("b");
+            roomPossibilities.remove("d");
+            roomPossibilities.remove("f");
+            roomPossibilities.remove("g");
+            roomPossibilities.remove("j");
+            roomPossibilities.remove("n");
+          }
+          if(facing == "south"){
+            roomPossibilities.remove("b");
+            roomPossibilities.remove("d");
+            roomPossibilities.remove("f");
+            roomPossibilities.remove("h");
+            roomPossibilities.remove("i");
+            roomPossibilities.remove("l");
+          }
+          if(facing == "east"){
+            roomPossibilities.remove("a");
+            roomPossibilities.remove("c");
+            roomPossibilities.remove("e");
+            roomPossibilities.remove("g");
+            roomPossibilities.remove("h");
+            roomPossibilities.remove("k");
+          }
+          if(facing == "west"){
+            roomPossibilities.remove("a");
+            roomPossibilities.remove("c");
+            roomPossibilities.remove("e");
+            roomPossibilities.remove("i");
+            roomPossibilities.remove("j");
+            roomPossibilities.remove("m");
+          }
+          ylevelMap.add(roomPossibilities.get(new Random().nextInt(roomPossibilities.size())));
+          ylevelStructure.add("s");
+          continue;
+        }
         // lav sjangse for at funksjonen fjernes f. eks hvis du ser sør og det er gang mot venstre men ikke opp fjernes alle muligheter
         ylevelMap.add(roomPossibilities.get(new Random().nextInt(roomPossibilities.size())));
         ylevelStructure.add(" ");
@@ -294,6 +293,10 @@ public class Map {
     }
     maps.add(mapLayout);
     structureLayouts.add(structureLayout);
+
+
+    position = maps.get(floor-1).get(y).get(x);
+    System.out.println(position);
   }
 
   public void move(String s){
