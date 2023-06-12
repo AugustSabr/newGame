@@ -2,6 +2,9 @@ import java.io.File;  // Import the File class
 import java.util.ArrayList;
 import java.util.Scanner; // Import the Scanner class to read text files
 
+import javax.crypto.ShortBufferException;
+import javax.sound.sampled.SourceDataLine;
+
 public class GameInventory {
   Map map;
   //arrays med nesten alle objects spillet vil trenge
@@ -11,12 +14,13 @@ public class GameInventory {
   // ArrayList<Blessing> Blessings = new ArrayList<Blessing>();
   ArrayList<Monster> Monsters = new ArrayList<Monster>();
 
-  private String[] categories = {"weapon", "item","armor", "blessing", "monster"};
+  private String[] categories = {"weapon", "item","armor", "blessing", "enemy"};
 
+  
   public GameInventory(){
     for (int i = 0; i < categories.length; i++){
       try {
-        File myObj = new File("localFiles/" + categories[i] + ".txt");//henter info fra relevant fil
+        File myObj = new File("localFiles/txt/" + categories[i] + ".txt");//henter info fra relevant fil
         Scanner myReader = new Scanner(myObj);
         while (myReader.hasNextLine()) {
           switch(categories[i]){//lager objects av all infoen i filen
@@ -24,7 +28,7 @@ public class GameInventory {
             case "item": Items.add(new Item(myReader.nextLine(), myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()))); break;
             case "armor": Armors.add(new Armor(myReader.nextLine(), myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()))); break;
             // case "blessing": Blessings.add(new Blessing(myReader.nextLine(), Integer.parseInt(myReader.nextLine()))); break;
-            case "monster": Monsters.add(new Monster(myReader.nextLine(), myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), this)); break;
+            case "enemy": Monsters.add(new Monster(myReader.nextLine(), myReader.nextLine(), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), Integer.parseInt(myReader.nextLine()), this)); break;
           }
         }
         myReader.close();
